@@ -12,7 +12,11 @@
     @mouseenter="hover = true"
     @mouseleave="hover = false"
 >
-    <a href="{{ localized_route('shop.item', ['url' => $product->url]) }}" class="absolute inset-0 z-10"></a>
+    <a
+        href="{{ localized_route('shop.item', ['url' => $product->url]) }}"
+        class="absolute inset-0 z-10"
+        aria-label="{{ __('View') }} {{ $product->title }}"
+    ></a>
 
     <div x-ref="imgBox" class="img relative overflow-hidden">
         @php
@@ -99,6 +103,7 @@
                     'url' => $product->url
                 ]) }})"
                 x-data
+                aria-label="{{ __('Toggle wishlist') }}: {{ $product->title }}"
                 class="w-10 h-10 rounded-full bg-white shadow-sm flex items-center justify-center opacity-0 scale-75 group-hover:opacity-100 group-hover:scale-100 transition-all duration-300 hover:bg-black"
                 style="transition-delay: 60ms"
             >
