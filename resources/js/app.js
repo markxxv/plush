@@ -56,6 +56,7 @@ document.addEventListener('alpine:init', () => {
         activeSlide: 0,
         totalSlides,
         images,
+        slides: totalSlides === 2 ? [...images, ...images] : images,
         isZoomed: false,
         isDragging: false,
         zoomPosition: { x: 0.5, y: 0.5 },
@@ -79,7 +80,9 @@ document.addEventListener('alpine:init', () => {
                 });
 
                 const syncSelected = () => {
-                    this.activeSlide = this.embla.selectedScrollSnap();
+                    this.activeSlide =
+                        this.embla.selectedScrollSnap() % this.totalSlides;
+
                     this.scrollThumbnailIntoView();
                 };
 
@@ -99,6 +102,14 @@ document.addEventListener('alpine:init', () => {
         destroy() {
             this.embla?.destroy();
             this.embla = null;
+        },
+
+        goPrev() {
+            this.embla?.scrollPrev();
+        },
+
+        goNext() {
+            this.embla?.scrollNext();
         },
 
         goTo(index) {
