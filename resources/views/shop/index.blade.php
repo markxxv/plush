@@ -26,7 +26,7 @@
     }
 
     $currentCollection = $currentCollection ?? $collection ?? null;
-    $collections = $collections ?? \App\Models\ProductCollection::where('active', true)->orderBy('position')->get();
+    $collections = $collections ?? collect();
 @endphp
 
 @section('metaTitle', $metaTitle)
