@@ -17,11 +17,11 @@
                 >
                     <!-- Embla container -->
                     <div class="flex h-full">
-                        <template x-for="(image, index) in slides" :key="index">
+                        <template x-for="(image, index) in images" :key="index">
                             <div class="relative h-full min-w-0 flex-[0_0_100%]">
                                 <!-- Zoom view -->
                                 <div
-                                    x-show="isZoomed && activeSlide === (index % totalSlides)"
+                                    x-show="isZoomed && activeSlide === index"
                                     class="absolute inset-0 h-full w-full"
                                     :style="{
                                         backgroundImage: 'url(' + image.large + ')',
@@ -38,7 +38,7 @@
                                     <source :srcset="image.large" type="image/webp">
                                     <img
                                         :src="image.large"
-                                        :alt="image.alt + ' - {{ __('img') }} ' + ((index % totalSlides) + 1)"
+                                        :alt="image.alt + ' - {{ __('img') }} ' + (index + 1)"
                                         class="h-full w-full object-cover object-center"
                                         draggable="false"
                                     >
