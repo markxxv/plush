@@ -1,6 +1,7 @@
 import * as CookieConsent from "vanilla-cookieconsent";
 
 import Alpine from 'alpinejs'
+import EmblaCarousel from 'embla-carousel'
 window.Alpine = Alpine
 
 const META_PIXEL_ID = '2751219188608886';
@@ -51,6 +52,131 @@ function showToast(message) {
 }
 
 document.addEventListener('alpine:init', () => {
+    Alpine.data('productGallery', (totalSlides, images) => ({
+        activeSlide: 0,
+        totalSlides,
+        images,
+        isZoomed: false,
+        isDragging: false,
+        zoomPosition: { x: 0.5, y: 0.5 },
+        embla: null,
+        pointerActive: false,
+        pointerStartX: 0,
+        pointerStartY: 0,
+        pointerMoved: false,
+
+        init() {
+            this.$nextTick(() => {
+                if (!this.$refs.viewport) return;
+
+                this.embla = EmblaCarousel(this.$refs.viewport, {
+                    align: 'start',
+                    containScroll: 'trimSnaps',
+                    loop: false,
+                    dragFree: false,
+                    duration: 25,
+                    watchDrag: () => !this.isZoomed,
+                });
+
+                const syncSelected = () => {
+                    this.activeSlide = this.embla.selectedScrollSnap();
+                    this.scrollThumbnailIntoView();
+                };
+
+                this.embla.on('select', syncSelected);
+                this.embla.on('reInit', syncSelected);
+                this.embla.on('pointerDown', () => {
+                    this.isDragging = true;
+                });
+                this.embla.on('pointerUp', () => {
+                    requestAnimationFrame(() => {
+                        this.isDragging = false;
+                    });
+                });
+
+                syncSelected();
+            });
+        },
+
+        destroy() {
+            this.embla?.destroy();
+            this.embla = null;
+        },
+
+        goTo(index) {
+            if (!this.embla) return;
+
+            const clamped = Math.max(0, Math.min(this.totalSlides - 1, index));
+            this.embla.scrollTo(clamped);
+        },
+
+        recordPointerDown(event) {
+            if (this.isZoomed) return;
+
+            this.pointerActive = true;
+            this.pointerMoved = false;
+            this.pointerStartX = event.clientX;
+            this.pointerStartY = event.clientY;
+        },
+
+        recordPointerUp(event) {
+            if (!this.pointerActive) return;
+
+            const dx = Math.abs(event.clientX - this.pointerStartX);
+            const dy = Math.abs(event.clientY - this.pointerStartY);
+
+            this.pointerMoved = dx > 6 || dy > 6;
+            this.pointerActive = false;
+        },
+
+        handleClick() {
+            if (this.pointerMoved || this.isDragging) {
+                this.pointerMoved = false;
+                return;
+            }
+
+            this.isZoomed = !this.isZoomed;
+        },
+
+        scrollThumbnailIntoView() {
+            this.$nextTick(() => {
+                const container = this.$refs.thumbScroller;
+                if (!container) return;
+
+                const activeButton = container.querySelector(
+                    `[data-thumb-index="${this.activeSlide}"]`
+                );
+
+                if (!activeButton) return;
+
+                const containerRect = container.getBoundingClientRect();
+                const buttonRect = activeButton.getBoundingClientRect();
+
+                if (
+                    buttonRect.left < containerRect.left ||
+                    buttonRect.right > containerRect.right
+                ) {
+                    activeButton.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'nearest',
+                        inline: 'nearest',
+                    });
+                }
+            });
+        },
+
+        handleMouseMove(event) {
+            if (!this.isZoomed) return;
+
+            const bounds = event.currentTarget.getBoundingClientRect();
+
+            this.zoomPosition = {
+                x: (event.clientX - bounds.left) / bounds.width,
+                y: (event.clientY - bounds.top) / bounds.height,
+            };
+        },
+    }));
+
     Alpine.store('cart', {
         items: [],
         isOpen: false,
