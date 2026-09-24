@@ -116,8 +116,10 @@ document.addEventListener('alpine:init', () => {
 
     Alpine.data('productPage', (product) => ({
         selectedSizeId: product.sizes.length === 1 ? product.sizes[0].id : null,
+        selectedColorId: null,
         quantity: 1,
         errors: {},
+        quickBuyOpen: false,
 
         addToCart() {
             this.errors = {};
@@ -126,9 +128,32 @@ document.addEventListener('alpine:init', () => {
                 this.errors.size = 'Select size';
             }
 
-            if (Object.keys(this.errors).length > 0) return;
+            if (Object.keys(this.errors).length > 0) return false;
 
-            this.$store.cart.addItem(product, this.selectedColorId, this.selectedSizeId, this.quantity);
+            this.$store.cart.addItem(
+                product,
+                this.selectedColorId,
+                this.selectedSizeId,
+                this.quantity
+            );
+
+            return true;
+        },
+
+        openQuickBuy() {
+            if (product.sizes.length > 1) {
+                this.errors = {};
+                this.quickBuyOpen = true;
+                return;
+            }
+
+            this.addToCart();
+        },
+
+        confirmQuickBuy() {
+            if (this.addToCart()) {
+                this.quickBuyOpen = false;
+            }
         }
     }));
 
