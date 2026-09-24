@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Spatie\MediaLibrary\HasMedia;
@@ -25,6 +26,18 @@ class ProductCollection extends Model implements HasMedia
             ->addMediaCollection('cover')
             ->useDisk('public')
             ->singleFile();
+    }
+
+    public function scopeForNavigation(Builder $query): Builder
+    {
+        return $query->select([
+            'product_collections.id',
+            'product_collections.name_en',
+            'product_collections.name_fr',
+            'product_collections.slug_en',
+            'product_collections.slug_fr',
+            'product_collections.position',
+        ]);
     }
 
     public function products(): BelongsToMany
