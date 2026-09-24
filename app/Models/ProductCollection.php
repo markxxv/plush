@@ -42,38 +42,43 @@ class ProductCollection extends Model implements HasMedia
 
     public function scopeForStorefrontDetail(Builder $query): Builder
     {
-        return $query
-            ->select([
-                'product_collections.id',
-                'product_collections.name_en',
-                'product_collections.name_fr',
-                'product_collections.slug_en',
-                'product_collections.slug_fr',
-                'product_collections.description_en',
-                'product_collections.description_fr',
-                'product_collections.video',
-                'product_collections.meta_title_en',
-                'product_collections.meta_title_fr',
-                'product_collections.meta_description_en',
-                'product_collections.meta_description_fr',
-            ])
-            ->with([
-                'media' => fn ($query) => $query
-                    ->select([
-                        'media.id',
-                        'media.model_type',
-                        'media.model_id',
-                        'media.collection_name',
-                        'media.name',
-                        'media.file_name',
-                        'media.disk',
-                        'media.conversions_disk',
-                        'media.order_column',
-                    ])
-                    ->where('collection_name', 'cover')
-                    ->orderBy('order_column')
-                    ->limit(1),
-            ]);
+        return $query->select([
+            'product_collections.id',
+            'product_collections.name_en',
+            'product_collections.name_fr',
+            'product_collections.slug_en',
+            'product_collections.slug_fr',
+            'product_collections.description_en',
+            'product_collections.description_fr',
+            'product_collections.video',
+            'product_collections.meta_title_en',
+            'product_collections.meta_title_fr',
+            'product_collections.meta_description_en',
+            'product_collections.meta_description_fr',
+        ]);
+    }
+
+    public function loadCoverMedia(): self
+    {
+        $this->load([
+            'media' => fn ($query) => $query
+                ->select([
+                    'media.id',
+                    'media.model_type',
+                    'media.model_id',
+                    'media.collection_name',
+                    'media.name',
+                    'media.file_name',
+                    'media.disk',
+                    'media.conversions_disk',
+                    'media.order_column',
+                ])
+                ->where('collection_name', 'cover')
+                ->orderBy('order_column')
+                ->limit(1),
+        ]);
+
+        return $this;
     }
 
     public function products(): BelongsToMany
