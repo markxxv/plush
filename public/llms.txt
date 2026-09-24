@@ -1,0 +1,26 @@
+# Maison Plush Paris
+
+> Maison Plush Paris is a French fashion and lifestyle brand offering limited-edition fashion, accessories and body-care products.
+
+Maison Plush operates an online store in English and French.
+
+## Shop
+
+- [Shop](https://maison-plush.com/shop): Browse currently available products.
+- [Collections](https://maison-plush.com/collections): Browse Maison Plush collections.
+
+## Brand
+
+- [About Maison Plush](https://maison-plush.com/about): Information about Maison Plush Paris.
+- [Contact](https://maison-plush.com/contact): Contact Maison Plush Paris.
+
+## Customer information
+
+- [Terms and Conditions](https://maison-plush.com/terms-and-conditions): Terms governing purchases and use of the website.
+- [Privacy Policy](https://maison-plush.com/privacy-policy): Information about privacy and personal data.
+- [Cookie Policy](https://maison-plush.com/cookies-policy): Information about cookies and consent.
+- [Disclaimer](https://maison-plush.com/disclaimer): Website disclaimer.
+
+## Social
+
+- [Instagram](https://www.instagram.com/plush.maison): Official Maison Plush Instagram account.
