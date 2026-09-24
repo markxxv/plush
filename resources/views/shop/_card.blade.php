@@ -21,15 +21,27 @@
                 ->sortBy('order_column')
                 ->values();
 
-            $firstImage = $images->get(0)?->getUrl('large');
-            $secondImage = $images->get(1)?->getUrl('large') ?? $firstImage;
+            $firstImage = $images->get(0)?->getUrl('small');
+            $secondImage = $images->get(1)?->getUrl('small') ?? $firstImage;
         @endphp
 
-        <img src="{{ $firstImage }}" class="first w-full block" alt="{{ $product->title }}">
+        <img
+            src="{{ $firstImage }}"
+            width="800"
+            height="1199"
+            loading="lazy"
+            decoding="async"
+            class="first w-full block"
+            alt="{{ $product->title }}"
+        >
 
         {{-- Liquid reveal: second image spreads from cursor position like a drop of water --}}
         <img
             src="{{ $secondImage }}"
+            width="800"
+            height="1199"
+            loading="lazy"
+            decoding="async"
             class="hover w-full absolute inset-0 object-cover transition-[clip-path] duration-[900ms] ease-out"
             :style="`clip-path: circle(${hover ? 150 : 0}% at ${x}% ${y}%)`"
             alt="{{ $product->title }}"
