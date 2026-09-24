@@ -11,39 +11,22 @@ const CLARITY_ID = 'qjix4dki1n';
 function showToast(message) {
     document.querySelector('.alert_box')?.remove();
 
+    const template = document.getElementById('storefront-toast-template');
+    if (!template) return;
+
     const toast = document.createElement('div');
     toast.className = 'alert_box';
     toast.setAttribute('role', 'status');
     toast.setAttribute('aria-live', 'polite');
+    toast.append(template.content.cloneNode(true));
 
-    const icon = document.createElement('div');
-    icon.className = 'alert_box__icon';
-    icon.setAttribute('aria-hidden', 'true');
-    icon.textContent = '✓';
+    const messageEl = toast.querySelector('[data-toast-message]');
+    const close = toast.querySelector('[data-toast-close]');
 
-    const text = document.createElement('div');
-    text.className = 'alert_box__content';
+    if (messageEl) {
+        messageEl.textContent = message;
+    }
 
-    const label = document.createElement('span');
-    label.className = 'alert_box__label';
-    label.textContent = 'Added';
-
-    const messageEl = document.createElement('span');
-    messageEl.className = 'alert_box__message';
-    messageEl.textContent = message;
-
-    const close = document.createElement('button');
-    close.type = 'button';
-    close.className = 'alert_box__close';
-    close.setAttribute('aria-label', 'Close notification');
-    close.textContent = '×';
-
-    const progress = document.createElement('span');
-    progress.className = 'alert_box__progress';
-    progress.setAttribute('aria-hidden', 'true');
-
-    text.append(label, messageEl);
-    toast.append(icon, text, close, progress);
     document.body.appendChild(toast);
 
     let removed = false;
@@ -58,13 +41,13 @@ function showToast(message) {
         window.setTimeout(() => toast.remove(), 220);
     };
 
-    close.addEventListener('click', removeToast);
+    close?.addEventListener('click', removeToast);
 
     requestAnimationFrame(() => {
         requestAnimationFrame(() => toast.classList.add('is-visible'));
     });
 
-    window.setTimeout(removeToast, 4000);
+    window.setTimeout(removeToast, 5000);
 }
 
 document.addEventListener('alpine:init', () => {
