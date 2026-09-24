@@ -99,5 +99,8 @@
     "Close menu": "Fermer le menu",
     "Payment Received": "Paiement reçu",
     "Awaiting Payment": "En attente de paiement",
-    "Navigation": "Navigation"
+    "Navigation": "Navigation",
+    "Open cart": "Ouvrir le panier",
+    "Toggle wishlist": "Ajouter ou retirer des favoris",
+    "View": "Voir"
 }
