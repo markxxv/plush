@@ -14,13 +14,22 @@
     <link rel="icon" href="/img/favicon.png" type="image/svg+xml">
     <link rel="apple-touch-icon" href="/img/apple-touch-icon.png">
 
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Josefin+Sans:ital,wght@0,100..700;1,100..700&family=Onest:wght@100..900&display=swap" rel="stylesheet">
+    <link
+        rel="preload"
+        href="/fonts/josefin-sans-v34-latin-300.woff2"
+        as="font"
+        type="font/woff2"
+        crossorigin
+    >
+    <link
+        rel="preload"
+        href="/fonts/jost-v20-latin-regular.woff2"
+        as="font"
+        type="font/woff2"
+        crossorigin
+    >
 
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Jost:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
+    @yield('head')
 
     <link rel="manifest" href="/manifest.webmanifest">
     @vite('resources/css/app.css')
