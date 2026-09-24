@@ -190,6 +190,23 @@ class Shop extends Controller
                         'product_collections.name_en',
                         'product_collections.name_fr',
                     ]),
+                'media' => fn ($query) => $query
+                    ->select([
+                        'media.id',
+                        'media.model_type',
+                        'media.model_id',
+                        'media.collection_name',
+                        'media.name',
+                        'media.file_name',
+                        'media.disk',
+                        'media.conversions_disk',
+                        'media.manipulations',
+                        'media.generated_conversions',
+                        'media.order_column',
+                    ])
+                    ->where('collection_name', 'gallery')
+                    ->orderBy('order_column')
+                    ->limit(1),
             ])
             ->firstOrFail();
 
@@ -198,6 +215,13 @@ class Shop extends Controller
         $slug = $product->{$slugColumn} ?: $product->slug_en;
         $collection = $product->collections->first();
         $collectionName = $collection?->{'name_' . $locale} ?: $collection?->name_en;
+
+        $coverMedia = $product->media->first();
+        $coverImage = $coverMedia
+            ? ($coverMedia->hasGeneratedConversion('small')
+                ? $coverMedia->getUrl('small')
+                : $coverMedia->getUrl())
+            : null;
 
         $description = preg_replace(
             '/<(br\s*\/?>|\/p|\/div|\/li|\/h[1-6])>/i',
@@ -234,6 +258,15 @@ class Shop extends Controller
                 ? '> Fiche produit Maison Plush Paris.'
                 : '> Maison Plush Paris product information.',
             '',
+        ];
+
+        if ($coverImage) {
+            $lines[] = "![{$title}]({$coverImage})";
+            $lines[] = '';
+        }
+
+        $lines = [
+            ...$lines,
             ($isFrench ? '- URL du produit: ' : '- Product URL: ') . $productUrl,
             ($isFrench ? '- Langue: Français' : '- Language: English'),
         ];
