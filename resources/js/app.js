@@ -56,7 +56,6 @@ document.addEventListener('alpine:init', () => {
         activeSlide: 0,
         totalSlides,
         images,
-        slides: totalSlides === 2 ? [...images, ...images] : images,
         isZoomed: false,
         isDragging: false,
         zoomPosition: { x: 0.5, y: 0.5 },
@@ -73,16 +72,14 @@ document.addEventListener('alpine:init', () => {
                 this.embla = EmblaCarousel(this.$refs.viewport, {
                     align: 'start',
                     containScroll: 'trimSnaps',
-                    loop: true,
+                    loop: false,
                     dragFree: false,
                     duration: 25,
                     watchDrag: () => !this.isZoomed,
                 });
 
                 const syncSelected = () => {
-                    this.activeSlide =
-                        this.embla.selectedScrollSnap() % this.totalSlides;
-
+                    this.activeSlide = this.embla.selectedScrollSnap();
                     this.scrollThumbnailIntoView();
                 };
 
@@ -115,10 +112,8 @@ document.addEventListener('alpine:init', () => {
         goTo(index) {
             if (!this.embla || this.totalSlides < 1) return;
 
-            const normalized =
-                ((index % this.totalSlides) + this.totalSlides) % this.totalSlides;
-
-            this.embla.scrollTo(normalized);
+            const clamped = Math.max(0, Math.min(this.totalSlides - 1, index));
+            this.embla.scrollTo(clamped);
         },
 
         recordPointerDown(event) {
