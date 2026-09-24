@@ -46,10 +46,12 @@
 
     <!-- Center Play Button -->
     <button
+        type="button"
         @click="togglePlay()"
         x-show="!playing"
         x-transition.opacity
         class="absolute inset-0 m-auto w-20 h-20 rounded-full bg-white/90 hover:bg-white flex items-center justify-center transition-colors"
+        aria-label="{{ __('Play video') }}"
     >
         <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="black" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
             <path d="M7 4v16l13 -8z" fill="black" stroke="none"/>
@@ -68,7 +70,12 @@
         x-transition.opacity
         class="absolute bottom-0 inset-x-0 p-6 flex items-center gap-4 text-white"
     >
-        <button @click="togglePlay()" class="shrink-0">
+        <button
+            type="button"
+            @click="togglePlay()"
+            class="shrink-0"
+            aria-label="{{ __('Play or pause video') }}"
+        >
             <svg x-show="!playing" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="white" stroke="none"><path d="M7 4v16l13 -8z"/></svg>
             <svg x-show="playing" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="6" y="4" width="4" height="16" rx="1" fill="white" stroke="none"/><rect x="14" y="4" width="4" height="16" rx="1" fill="white" stroke="none"/></svg>
         </button>
@@ -85,7 +92,12 @@
             ></div>
         </div>
 
-        <button @click="toggleMute()" class="shrink-0">
+        <button
+            type="button"
+            @click="toggleMute()"
+            class="shrink-0"
+            aria-label="{{ __('Mute or unmute video') }}"
+        >
             <svg x-show="!muted" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
                 <path d="M15 8a5 5 0 0 1 0 8" /><path d="M17.7 5a9 9 0 0 1 0 14" /><path d="M6 15h-2a1 1 0 0 1 -1 -1v-4a1 1 0 0 1 1 -1h2l3.5 -4.5a.8 .8 0 0 1 1.5 .5v14a.8 .8 0 0 1 -1.5 .5l-3.5 -4.5" />
             </svg>
