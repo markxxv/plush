@@ -2,7 +2,7 @@
     <div class="container footer_grid">
         <article class="space-y-8 order-1 md:order-1">
             <p>
-                <img src="/img/logo_white.svg" width="160" alt="Maison Plush Paris">
+                <img src="/img/logo_white.svg" width="160" height="29" alt="Maison Plush Paris">
             </p>
             <p class="font-medium">Maison Plush Paris</p>
             <p>
