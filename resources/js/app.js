@@ -120,6 +120,34 @@ document.addEventListener('alpine:init', () => {
         quantity: 1,
         errors: {},
         quickBuyOpen: false,
+        quickBuyVisible: false,
+        quickBuyCheck: null,
+
+        init() {
+            const hero = document.querySelector('[data-product-hero]');
+            if (!hero) return;
+
+            this.quickBuyCheck = () => {
+                this.quickBuyVisible =
+                    hero.getBoundingClientRect().bottom <= window.innerHeight - 100;
+
+                if (!this.quickBuyVisible) {
+                    this.quickBuyOpen = false;
+                }
+            };
+
+            this.quickBuyCheck();
+
+            window.addEventListener('scroll', this.quickBuyCheck, { passive: true });
+            window.addEventListener('resize', this.quickBuyCheck);
+        },
+
+        destroy() {
+            if (!this.quickBuyCheck) return;
+
+            window.removeEventListener('scroll', this.quickBuyCheck);
+            window.removeEventListener('resize', this.quickBuyCheck);
+        },
 
         addToCart() {
             this.errors = {};
