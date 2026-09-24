@@ -17,18 +17,23 @@ class Front extends Controller
         $topProductIds = [29, 28, 27, 26];
         $topFashionIds = [37, 36, 35, 34, 33, 32, 31, 30, 24];
 
-        $topProducts = Product::query()
+        $featuredProducts = Product::query()
             ->forCard()
-            ->whereIn('products.id', $topProductIds)
+            ->whereIn(
+                'products.id',
+                array_values(array_unique([...$topProductIds, ...$topFashionIds]))
+            )
             ->get()
-            ->sortBy(fn (Product $product) => array_search($product->id, $topProductIds, true))
+            ->keyBy('id');
+
+        $topProducts = collect($topProductIds)
+            ->map(fn (int $id) => $featuredProducts->get($id))
+            ->filter()
             ->values();
 
-        $topFashop = Product::query()
-            ->forCard()
-            ->whereIn('products.id', $topFashionIds)
-            ->get()
-            ->sortBy(fn (Product $product) => array_search($product->id, $topFashionIds, true))
+        $topFashop = collect($topFashionIds)
+            ->map(fn (int $id) => $featuredProducts->get($id))
+            ->filter()
             ->values();
 
         $collection = Product::query()
