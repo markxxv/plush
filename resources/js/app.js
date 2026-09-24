@@ -1,8 +1,18 @@
-import * as CookieConsent from "vanilla-cookieconsent";
-
 import Alpine from 'alpinejs'
 import EmblaCarousel from 'embla-carousel'
+
 window.Alpine = Alpine
+
+let CookieConsent = null;
+
+const cookieConsentReady = Promise.all([
+    import('vanilla-cookieconsent'),
+    import('../css/cookieconsent.css'),
+]).then(([module]) => {
+    CookieConsent = module;
+
+    return module;
+});
 
 const META_PIXEL_ID = '2751219188608886';
 const GA_ID = 'G-S1M9Q3EGJ9';
@@ -54,6 +64,40 @@ function showToast(message, label = null) {
     });
 
     window.setTimeout(removeToast, 5000);
+}
+
+function initDeferredHeroVideo() {
+    const video = document.querySelector('[data-hero-video]');
+    if (!video) return;
+
+    const loadAndPlay = () => {
+        const source = video.querySelector('source[data-src]');
+        if (!source) return;
+
+        source.src = source.dataset.src;
+        source.removeAttribute('data-src');
+
+        video.load();
+
+        const play = video.play();
+
+        play?.catch(() => {
+            // Poster remains visible if autoplay is unavailable.
+        });
+    };
+
+    if ('requestIdleCallback' in window) {
+        window.requestIdleCallback(loadAndPlay, { timeout: 1200 });
+        return;
+    }
+
+    window.setTimeout(loadAndPlay, 600);
+}
+
+if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initDeferredHeroVideo, { once: true });
+} else {
+    initDeferredHeroVideo();
 }
 
 document.addEventListener('alpine:init', () => {
@@ -590,6 +634,16 @@ window.metaTrack = function (
     parameters = {},
     uniqueKey = null
 ) {
+    if (!CookieConsent) {
+        pendingMetaEvents.push({
+            event,
+            parameters,
+            uniqueKey,
+        });
+
+        return;
+    }
+
     if (CookieConsent.acceptedCategory('marketing')) {
         sendMetaEvent(event, parameters, uniqueKey);
 
@@ -674,9 +728,10 @@ function syncGAConsent() {
 }
 
 // Cookies Banner
-document.addEventListener("DOMContentLoaded", () => {
+document.addEventListener("DOMContentLoaded", async () => {
+    const consent = await cookieConsentReady;
 
-    CookieConsent.run({
+    consent.run({
         mode: 'opt-in',
 
         // Увеличивай число при существенном изменении политики.
