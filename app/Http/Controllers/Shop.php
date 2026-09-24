@@ -34,6 +34,10 @@ class Shop extends Controller
                 ->whereKey($navigationCollection->id)
                 ->where('active', true)
                 ->firstOrFail();
+
+            if ($currentCollection->description && ! $currentCollection->video) {
+                $currentCollection->loadCoverMedia();
+            }
         }
 
         $products = Product::query()
@@ -146,6 +150,10 @@ class Shop extends Controller
             ->where('active', true)
             ->where('slug_' . $locale, $url)
             ->firstOrFail();
+
+        if ($collection->description && ! $collection->video) {
+            $collection->loadCoverMedia();
+        }
 
         $collections = ProductCollection::query()
             ->forNavigation()
