@@ -37,6 +37,29 @@
     {{ $slot }}
     @include('layouts.footer')
     <x-mobile-menu />
+
+    <template id="storefront-toast-template">
+        <div class="alert_box__icon" aria-hidden="true">
+            <x-tabler-circle-check class="size-5" stroke-width="1.7" />
+        </div>
+
+        <div class="alert_box__content">
+            <span class="alert_box__label">{{ __('Added') }}</span>
+            <span class="alert_box__message" data-toast-message></span>
+        </div>
+
+        <button
+            type="button"
+            class="alert_box__close"
+            data-toast-close
+            aria-label="{{ __('Close notification') }}"
+        >
+            <x-tabler-x class="size-5" stroke-width="1.7" />
+        </button>
+
+        <span class="alert_box__progress" aria-hidden="true"></span>
+    </template>
+
     @vite(['resources/js/app.js'])
 </body>
 </html>
