@@ -1,11 +1,22 @@
 @section('metaTitle', 'Maison Plush Paris - Water Inspired Fashion')
 @section('metaDescription', '')
 @section('body_class', 'white_header')
+@section('head')
+    <link rel="preload" as="image" href="/img/poster.webp" fetchpriority="high">
+@endsection
 
 <x-layout>
     <section class="main_header video-section">
-      <video class="video-bg" autoplay loop muted playsinline>
-          <source src="/img/main_products.mp4" type="video/mp4">
+      <video
+          class="video-bg"
+          muted
+          loop
+          playsinline
+          preload="none"
+          poster="/img/poster.webp"
+          data-hero-video
+      >
+          <source data-src="/img/main_products.mp4" type="video/mp4">
       </video>
       <div class="inner">
         <p class="pre_title">{{ __('LIMITED EDITION') }}</p>
