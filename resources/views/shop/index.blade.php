@@ -105,6 +105,8 @@
 
 
     @if(isset($currentCollection) && $currentCollection->description)
+        @php($collectionCover = $currentCollection->cover)
+
         <section class="container my-12 lg:my-24">
             <div class="grid md:grid-cols-2 gap-12 lg:gap-24 items-center">
 
@@ -144,7 +146,7 @@
                         <video
                             x-ref="vid"
                             src="/storage/{{ $currentCollection->video }}"
-                            @if($currentCollection->cover) poster="{{ $currentCollection->cover }}" @endif
+                            @if($collectionCover) poster="{{ $collectionCover }}" @endif
                             class="absolute inset-0 w-full h-full object-cover"
                             playsinline
                             loop
@@ -205,10 +207,10 @@
                             </button>
                         </div>
                     </div>
-                @elseif($currentCollection->cover)
+                @elseif($collectionCover)
                     <!-- Cover Image (orientation-agnostic) -->
                     <div class="rounded-3xl overflow-hidden bg-neutral-100 flex items-center justify-center">
-                        <img src="{{ $currentCollection->cover }}" alt="{{ $currentCollection->name }}" class="w-full h-auto max-h-[720px] object-contain">
+                        <img src="{{ $collectionCover }}" alt="{{ $currentCollection->name }}" class="w-full h-auto max-h-[720px] object-contain">
                     </div>
                 @endif
 
