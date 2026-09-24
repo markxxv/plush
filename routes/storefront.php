@@ -11,6 +11,7 @@ Route::view('about', 'pages.about')->name('about');
 Route::view('contact', 'pages.contact')->name('contact');
 
 Route::get('shop', [Shop::class, 'index'])->name('shop');
+Route::get('fashion/{url}.md', [Shop::class, 'productMarkdown'])->name('shop.item.markdown');
 Route::get('fashion/{url}', [Shop::class, 'product'])->name('shop.item');
 
 Route::get('collections', [Shop::class, 'collections'])->name('collections');
