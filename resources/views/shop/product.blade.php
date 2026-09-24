@@ -490,7 +490,7 @@
                     {{ __('Shipping') }}
                 </button>
 
-                @if($product->reviews()->count() > 0)
+                @if($product->reviews->isNotEmpty())
                 <button
                     @click="tab = 'reviews'"
                     :class="tab === 'reviews' ? 'text-black bg-neutral-100 px-5' : 'text-neutral-600 hover:text-black'"
@@ -593,7 +593,7 @@
                     </div>
                 </article>
 
-               @if($product->reviews()->count() > 0)
+               @if($product->reviews->isNotEmpty())
                 <article x-show="tab === 'reviews'" x-cloak>
                     <div class="flex items-end justify-between gap-8 mb-10">
                         <div>
@@ -607,7 +607,7 @@
                                         <span>★</span>
                                     @endfor
                                 </div>
-                                <p class="text-sm text-neutral-500"> {{ $product->reviews()->avg('rating') }} / 5 {{ __('based on early feedback') }}</p>
+                                <p class="text-sm text-neutral-500"> {{ $product->reviews->avg('rating') }} / 5 {{ __('based on early feedback') }}</p>
                             </div>
                         </div>
                     </div>
