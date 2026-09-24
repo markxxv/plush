@@ -157,6 +157,137 @@ class Shop extends Controller
         ]);
     }
 
+    public function productMarkdown($url)
+    {
+        $locale = app()->getLocale();
+        $slugColumn = 'slug_' . $locale;
+
+        $product = Product::query()
+            ->select([
+                'products.id',
+                'products.title_en',
+                'products.title_fr',
+                'products.slug_en',
+                'products.slug_fr',
+                'products.description_en',
+                'products.description_fr',
+                'products.price',
+                'products.availability',
+                'products.preorder',
+            ])
+            ->where($slugColumn, $url)
+            ->where('active', true)
+            ->with([
+                'sizes' => fn ($query) => $query
+                    ->select([
+                        'product_sizes.id',
+                        'product_sizes.value',
+                    ])
+                    ->orderBy('product_sizes.position'),
+                'collections' => fn ($query) => $query
+                    ->select([
+                        'product_collections.id',
+                        'product_collections.name_en',
+                        'product_collections.name_fr',
+                    ]),
+            ])
+            ->firstOrFail();
+
+        $title = $product->{'title_' . $locale} ?: $product->title_en;
+        $description = $product->{'description_' . $locale} ?: $product->description_en ?: '';
+        $slug = $product->{$slugColumn} ?: $product->slug_en;
+        $collection = $product->collections->first();
+        $collectionName = $collection?->{'name_' . $locale} ?: $collection?->name_en;
+
+        $description = preg_replace(
+            '/<(br\s*\/?>|\/p|\/div|\/li|\/h[1-6])>/i',
+            "\n",
+            $description
+        );
+
+        $description = trim(html_entity_decode(
+            strip_tags($description),
+            ENT_QUOTES | ENT_HTML5,
+            'UTF-8'
+        ));
+
+        $description = preg_replace("/\n{3,}/", "\n\n", $description);
+
+        $productUrl = localized_route(
+            'shop.item',
+            ['url' => $slug],
+            $locale
+        );
+
+        $isFrench = $locale === 'fr';
+
+        $status = match (true) {
+            $product->preorder => $isFrench ? 'Précommande' : 'Pre-order',
+            $product->availability => $isFrench ? 'Disponible' : 'Available',
+            default => $isFrench ? 'Rupture de stock' : 'Out of stock',
+        };
+
+        $lines = [
+            "# {$title}",
+            '',
+            $isFrench
+                ? '> Fiche produit Maison Plush Paris.'
+                : '> Maison Plush Paris product information.',
+            '',
+            ($isFrench ? '- URL du produit: ' : '- Product URL: ') . $productUrl,
+            ($isFrench ? '- Langue: Français' : '- Language: English'),
+        ];
+
+        if ($collectionName) {
+            $lines[] = ($isFrench ? '- Collection: ' : '- Collection: ') . $collectionName;
+        }
+
+        if ((float) $product->price > 0) {
+            $lines[] = ($isFrench ? '- Prix: ' : '- Price: ')
+                . number_format((float) $product->price, 0, '.', ' ')
+                . ' EUR';
+        }
+
+        $lines[] = ($isFrench ? '- Statut d’achat: ' : '- Purchase status: ') . $status;
+
+        if ($product->preorder) {
+            $lines[] = '';
+            $lines[] = $isFrench ? '## Précommande' : '## Pre-order';
+            $lines[] = '';
+            $lines[] = $isFrench
+                ? 'Cet article est disponible en précommande. La demande de précommande peut être envoyée depuis la page produit.'
+                : 'This item is available for pre-order. A pre-order request can be submitted from the product page.';
+        }
+
+        if ($product->sizes->isNotEmpty()) {
+            $lines[] = '';
+            $lines[] = $isFrench ? '## Tailles' : '## Sizes';
+            $lines[] = '';
+
+            foreach ($product->sizes as $size) {
+                $lines[] = '- ' . $size->value;
+            }
+        }
+
+        if ($description !== '') {
+            $lines[] = '';
+            $lines[] = $isFrench ? '## Description' : '## Description';
+            $lines[] = '';
+            $lines[] = $description;
+        }
+
+        $lines[] = '';
+
+        return response(
+            implode("\n", $lines),
+            200,
+            [
+                'Content-Type' => 'text/markdown; charset=UTF-8',
+                'Content-Language' => $locale,
+            ]
+        );
+    }
+
     public function collections()
     {
         $collections = ProductCollection::query()
