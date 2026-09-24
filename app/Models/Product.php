@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -22,6 +23,37 @@ class Product extends Model implements HasMedia
         'created_at' => 'datetime',
         'updated_at' => 'datetime',
     ];
+
+    public function scopeForCard(Builder $query): Builder
+    {
+        return $query
+            ->select([
+                'products.id',
+                'products.title_en',
+                'products.title_fr',
+                'products.slug_en',
+                'products.slug_fr',
+                'products.price',
+            ])
+            ->with([
+                'media' => fn ($query) => $query
+                    ->select([
+                        'media.id',
+                        'media.model_type',
+                        'media.model_id',
+                        'media.collection_name',
+                        'media.name',
+                        'media.file_name',
+                        'media.disk',
+                        'media.conversions_disk',
+                        'media.manipulations',
+                        'media.order_column',
+                    ])
+                    ->where('collection_name', 'gallery')
+                    ->orderBy('order_column')
+                    ->limit(2),
+            ]);
+    }
 
     public function sizes(): BelongsToMany
     {
