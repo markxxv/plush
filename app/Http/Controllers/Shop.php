@@ -77,13 +77,6 @@ class Shop extends Controller
 
         $collectionIds = $product->collections->pluck('id');
 
-       $media = [
-            'media' => fn ($query) => $query
-                ->where('collection_name', 'gallery')
-                ->orderBy('order_column')
-                ->limit(2),
-        ];
-
         $similar = collect();
 
         if ($collectionIds->isNotEmpty()) {
