@@ -89,9 +89,7 @@ document.addEventListener('alpine:init', () => {
                     this.isDragging = true;
                 });
                 this.embla.on('pointerUp', () => {
-                    requestAnimationFrame(() => {
-                        this.isDragging = false;
-                    });
+                    this.isDragging = false;
                 });
 
                 syncSelected();
