@@ -490,7 +490,7 @@ body {
     height: 100%;
     background: #fff;
     transform-origin: left center;
-    animation: alert-progress 4s linear forwards;
+    animation: alert-progress 5s linear forwards;
 }
 
 @keyframes alert-icon-in {
