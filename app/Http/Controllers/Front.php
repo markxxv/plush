@@ -14,43 +14,30 @@ class Front extends Controller
 {
     public function home()
     {
+        $topProductIds = [29, 28, 27, 26];
+        $topFashionIds = [37, 36, 35, 34, 33, 32, 31, 30, 24];
 
         $topProducts = Product::query()
-            ->whereIn('id', [29, 28, 27, 26])
-            ->with([
-                'media' => fn ($query) => $query
-                    ->where('collection_name', 'gallery')
-                    ->orderBy('order_column')
-                    ->limit(4),
-            ])
+            ->forCard()
+            ->whereIn('products.id', $topProductIds)
             ->get()
-            ->sortBy(fn ($product) => array_search($product->id, [29, 28, 27, 26]))
+            ->sortBy(fn (Product $product) => array_search($product->id, $topProductIds, true))
             ->values();
 
         $topFashop = Product::query()
-            ->whereIn('id', [37, 36, 35, 34, 33, 32, 31, 30, 24])
-            ->with([
-                'media' => fn ($query) => $query
-                    ->where('collection_name', 'gallery')
-                    ->orderBy('order_column')
-                    ->limit(8),
-            ])
+            ->forCard()
+            ->whereIn('products.id', $topFashionIds)
             ->get()
-            ->sortBy(fn ($product) => array_search($product->id, [37, 36, 35, 34, 33, 32, 31, 30, 24]))
+            ->sortBy(fn (Product $product) => array_search($product->id, $topFashionIds, true))
             ->values();
 
         $collection = Product::query()
-            ->where('active', true)
+            ->forCard()
+            ->where('products.active', true)
             ->whereHas('collections', fn ($query) => $query
                 ->where('product_collections.id', 3)
             )
-            ->with([
-                'media' => fn ($query) => $query
-                    ->where('collection_name', 'gallery')
-                    ->orderBy('order_column')
-                    ->limit(8),
-            ])
-            ->latest('id')
+            ->latest('products.id')
             ->get();
 
         return view('home', [
