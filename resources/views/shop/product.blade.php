@@ -21,7 +21,7 @@
 <x-layout>
     <main class="">
         <div class="container">
-            <div class="grid md:grid-cols-2 lg:grid-cols-[1fr_600px] lg:gap-12 xl:gap-24 items-center">
+            <div data-product-hero class="grid md:grid-cols-2 lg:grid-cols-[1fr_600px] lg:gap-12 xl:gap-24 items-center">
 
                 {{-- Product Gallery --}}
                 <section class="relative">
@@ -283,14 +283,77 @@
                     </div>
 
                     @if(!$product->preorder && $product->availability)
-                        <div class="fixed inset-x-0 bottom-0 z-50 pointer-events-none md:p-4">
-                            <div class="pointer-events-auto bg-white shadow-2xl md:mx-auto md:max-w-2xl md:rounded-2xl">
-                                <div class="flex items-center gap-3 px-3 pt-2 pb-[max(0.5rem,env(safe-area-inset-bottom))] md:p-3">
+                        <div
+                            x-show="quickBuyVisible"
+                            x-cloak
+                            x-transition:enter="transition ease-out duration-200"
+                            x-transition:enter-start="translate-y-4 opacity-0"
+                            x-transition:enter-end="translate-y-0 opacity-100"
+                            x-transition:leave="transition ease-in duration-150"
+                            x-transition:leave-start="translate-y-0 opacity-100"
+                            x-transition:leave-end="translate-y-4 opacity-0"
+                            class="pointer-events-none fixed inset-x-0 bottom-0 z-50 p-2 pb-[max(0.5rem,env(safe-area-inset-bottom))] md:left-auto md:right-4 md:bottom-4 md:w-[360px] md:p-0"
+                        >
+                            <div class="pointer-events-auto bg-white p-2 shadow-2xl rounded-t-2xl md:rounded-2xl">
+                                @if($product->sizes->count() > 1)
+                                    <div
+                                        x-show="quickBuyOpen"
+                                        x-cloak
+                                        x-transition:enter="transition ease-out duration-200"
+                                        x-transition:enter-start="translate-y-2 opacity-0"
+                                        x-transition:enter-end="translate-y-0 opacity-100"
+                                        x-transition:leave="transition ease-in duration-150"
+                                        x-transition:leave-start="translate-y-0 opacity-100"
+                                        x-transition:leave-end="translate-y-2 opacity-0"
+                                        class="hidden md:block pb-2"
+                                    >
+                                        <div class="flex items-center justify-between gap-3 px-1 pb-2">
+                                            <p class="text-xs font-medium text-neutral-500">
+                                                {{ __('Select Size') }}
+                                            </p>
+
+                                            <button
+                                                type="button"
+                                                @click="quickBuyOpen = false"
+                                                class="flex size-7 items-center justify-center rounded-full bg-zinc-100 text-zinc-500 transition hover:bg-zinc-200 hover:text-black"
+                                                aria-label="{{ __('Close') }}"
+                                            >
+                                                <x-tabler-x class="size-4" stroke-width="1.5" />
+                                            </button>
+                                        </div>
+
+                                        <div class="grid grid-cols-4 gap-2">
+                                            @foreach($product->sizes as $size)
+                                                <label class="block cursor-pointer">
+                                                    <input
+                                                        type="radio"
+                                                        name="quick-size-desktop"
+                                                        value="{{ $size->id }}"
+                                                        x-model.number="selectedSizeId"
+                                                        @change="errors.size = null; confirmQuickBuy()"
+                                                        class="sr-only"
+                                                    >
+
+                                                    <span
+                                                        class="flex h-10 w-full items-center justify-center rounded-xl text-sm font-medium ring-1 transition"
+                                                        :class="selectedSizeId === {{ $size->id }}
+                                                            ? 'bg-black text-white ring-black'
+                                                            : 'bg-white text-black ring-zinc-200 hover:ring-black'"
+                                                    >
+                                                        {{ $size->value }}
+                                                    </span>
+                                                </label>
+                                            @endforeach
+                                        </div>
+                                    </div>
+                                @endif
+
+                                <div class="flex items-center gap-2">
                                     @if($product->getFirstMediaUrl('gallery', 'thumb'))
                                         <img
                                             src="{{ $product->getFirstMediaUrl('gallery', 'thumb') }}"
                                             alt="{{ $title }}"
-                                            class="hidden h-14 w-11 shrink-0 rounded-xl object-cover md:block"
+                                            class="hidden size-12 shrink-0 rounded-xl object-cover md:block"
                                         >
                                     @endif
 
@@ -300,24 +363,19 @@
                                         </p>
 
                                         @if($product->price > 0)
-                                            <p class="mt-0.5 text-sm text-neutral-500">
+                                            <p class="mt-0.5 text-xs text-neutral-500">
                                                 {{ number_format((float) $product->price, 0) }}€
                                             </p>
                                         @endif
                                     </div>
 
-                                    @if($product->price > 0)
-                                        <p class="shrink-0 text-sm font-medium text-black md:hidden">
-                                            {{ number_format((float) $product->price, 0) }}€
-                                        </p>
-                                    @endif
-
                                     <button
                                         type="button"
                                         @click="openQuickBuy()"
-                                        class="flex h-11 flex-1 items-center justify-center rounded-xl bg-black px-5 text-sm font-medium text-white transition hover:bg-neutral-800 md:flex-none md:min-w-44"
+                                        class="flex h-11 flex-1 items-center justify-center gap-2 rounded-xl bg-black px-4 text-sm font-medium text-white transition hover:bg-neutral-800 md:h-12 md:flex-none"
                                     >
-                                        {{ __('Add to Cart') }}
+                                        <x-tabler-shopping-bag class="size-4" stroke-width="1.5" />
+                                        <span>{{ __('Add to Cart') }}</span>
                                     </button>
                                 </div>
                             </div>
@@ -328,7 +386,7 @@
                                 x-show="quickBuyOpen"
                                 x-cloak
                                 @keydown.escape.window="quickBuyOpen = false"
-                                class="fixed inset-0 z-[70]"
+                                class="fixed inset-0 z-[70] md:hidden"
                             >
                                 <button
                                     type="button"
@@ -346,28 +404,25 @@
                                     x-transition:leave-start="translate-y-0"
                                     x-transition:leave-end="translate-y-full"
                                     @click.stop
-                                    class="absolute inset-x-0 bottom-0 bg-white px-4 pt-4 pb-[max(1rem,env(safe-area-inset-bottom))] shadow-2xl md:left-1/2 md:right-auto md:bottom-24 md:w-[420px] md:-translate-x-1/2 md:rounded-2xl md:p-6"
+                                    class="absolute inset-x-0 bottom-0 rounded-t-2xl bg-white p-2 pb-[max(0.5rem,env(safe-area-inset-bottom))] shadow-2xl"
                                 >
-                                    <div class="mx-auto mb-4 h-1 w-10 rounded-full bg-zinc-200 md:hidden"></div>
+                                    <div class="px-2 pb-3 pt-2">
+                                        <div class="mx-auto mb-4 h-1 w-10 rounded-full bg-zinc-200"></div>
 
-                                    <div class="mb-5 flex items-start justify-between gap-4">
-                                        <div class="min-w-0">
-                                            <p class="text-xs text-neutral-400">
+                                        <div class="flex items-center justify-between gap-3">
+                                            <p class="text-sm font-medium text-black">
                                                 {{ __('Select Size') }}
                                             </p>
-                                            <p class="mt-1 truncate text-base font-medium text-black">
-                                                {{ $title }}
-                                            </p>
-                                        </div>
 
-                                        <button
-                                            type="button"
-                                            @click="quickBuyOpen = false"
-                                            class="flex size-8 shrink-0 items-center justify-center rounded-full bg-zinc-100 text-lg leading-none text-zinc-500 transition hover:bg-zinc-200 hover:text-black"
-                                            aria-label="{{ __('Close') }}"
-                                        >
-                                            ×
-                                        </button>
+                                            <button
+                                                type="button"
+                                                @click="quickBuyOpen = false"
+                                                class="flex size-8 items-center justify-center rounded-full bg-zinc-100 text-zinc-500"
+                                                aria-label="{{ __('Close') }}"
+                                            >
+                                                <x-tabler-x class="size-4" stroke-width="1.5" />
+                                            </button>
+                                        </div>
                                     </div>
 
                                     <div class="grid grid-cols-4 gap-2">
@@ -375,10 +430,10 @@
                                             <label class="block cursor-pointer">
                                                 <input
                                                     type="radio"
-                                                    name="quick-size"
+                                                    name="quick-size-mobile"
                                                     value="{{ $size->id }}"
                                                     x-model.number="selectedSizeId"
-                                                    @change="errors.size = null"
+                                                    @change="errors.size = null; confirmQuickBuy()"
                                                     class="sr-only"
                                                 >
 
@@ -386,29 +441,13 @@
                                                     class="flex h-11 w-full items-center justify-center rounded-xl text-sm font-medium ring-1 transition"
                                                     :class="selectedSizeId === {{ $size->id }}
                                                         ? 'bg-black text-white ring-black'
-                                                        : 'bg-white text-black ring-zinc-200 hover:ring-black'"
+                                                        : 'bg-white text-black ring-zinc-200'"
                                                 >
                                                     {{ $size->value }}
                                                 </span>
                                             </label>
                                         @endforeach
                                     </div>
-
-                                    <p
-                                        x-show="errors.size"
-                                        x-cloak
-                                        class="mt-2 text-sm font-medium text-red-400"
-                                    >
-                                        {{ __('Select Size') }}
-                                    </p>
-
-                                    <button
-                                        type="button"
-                                        @click="confirmQuickBuy()"
-                                        class="mt-4 flex h-12 w-full items-center justify-center rounded-xl bg-black px-5 text-sm font-medium text-white transition hover:bg-neutral-800"
-                                    >
-                                        {{ __('Add to Cart') }}
-                                    </button>
                                 </div>
                             </div>
                         @endif
