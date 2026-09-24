@@ -292,9 +292,9 @@
                             x-transition:leave="transition ease-in duration-150"
                             x-transition:leave-start="translate-y-0 opacity-100"
                             x-transition:leave-end="translate-y-4 opacity-0"
-                            class="pointer-events-none fixed inset-x-0 bottom-0 z-50 p-2 pb-[max(0.5rem,env(safe-area-inset-bottom))] md:left-auto md:right-4 md:bottom-4 md:w-[360px] md:p-0"
+                            class="pointer-events-none fixed inset-x-0 bottom-0 z-50 md:left-auto md:right-4 md:bottom-4 md:w-[360px]"
                         >
-                            <div class="pointer-events-auto bg-white p-2 shadow-2xl rounded-t-2xl md:rounded-2xl">
+                            <div class="pointer-events-auto bg-white p-2 pb-[max(0.5rem,env(safe-area-inset-bottom))] shadow-2xl md:rounded-2xl">
                                 @if($product->sizes->count() > 1)
                                     <div
                                         x-show="quickBuyOpen"
@@ -353,7 +353,7 @@
                                         <img
                                             src="{{ $product->getFirstMediaUrl('gallery', 'thumb') }}"
                                             alt="{{ $title }}"
-                                            class="hidden size-12 shrink-0 rounded-xl object-cover md:block"
+                                            class="size-12 shrink-0 rounded-xl object-cover"
                                         >
                                     @endif
 
