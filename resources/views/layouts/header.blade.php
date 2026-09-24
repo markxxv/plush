@@ -24,7 +24,7 @@
         </fieldset>
         <fieldset class="site_header_center">
             <a href="{{ localized_route('shop') }}" class="hidden text-xs uppercase md:inline-block" style="letter-spacing: 1px;">{{ __('Shop') }}</a>
-            <a href="{{ localized_route('home') }}"><img src="/img/logo.svg" width="150" alt="Maison Plush Paris"></a>
+            <a href="{{ localized_route('home') }}"><img src="/img/logo.svg" width="150" height="53" alt="Maison Plush Paris"></a>
             <a href="{{ localized_route('collections') }}" class="hidden text-xs uppercase md:inline-block" style="letter-spacing: 1px;">{{ __('Collections') }}</a>
         </fieldset>
         <fieldset x-data class="site_header_right items-center">
