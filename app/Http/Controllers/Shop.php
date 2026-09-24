@@ -35,7 +35,7 @@ class Shop extends Controller
                 ->where('active', true)
                 ->firstOrFail();
 
-            if ($currentCollection->description && ! $currentCollection->video) {
+            if ($currentCollection->description) {
                 $currentCollection->loadCoverMedia();
             }
         }
@@ -151,7 +151,7 @@ class Shop extends Controller
             ->where('slug_' . $locale, $url)
             ->firstOrFail();
 
-        if ($collection->description && ! $collection->video) {
+        if ($collection->description) {
             $collection->loadCoverMedia();
         }
 
