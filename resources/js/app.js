@@ -4,15 +4,20 @@ import EmblaCarousel from 'embla-carousel'
 window.Alpine = Alpine
 
 let CookieConsent = null;
+let cookieConsentReady = null;
 
-const cookieConsentReady = Promise.all([
-    import('vanilla-cookieconsent'),
-    import('../css/cookieconsent.css'),
-]).then(([module]) => {
-    CookieConsent = module;
+function loadCookieConsent() {
+    cookieConsentReady ??= Promise.all([
+        import('vanilla-cookieconsent'),
+        import('../css/cookieconsent.css'),
+    ]).then(([module]) => {
+        CookieConsent = module;
 
-    return module;
-});
+        return module;
+    });
+
+    return cookieConsentReady;
+}
 
 const META_PIXEL_ID = '2751219188608886';
 const GA_ID = 'G-S1M9Q3EGJ9';
@@ -86,12 +91,18 @@ function initDeferredHeroVideo() {
         });
     };
 
-    if ('requestIdleCallback' in window) {
-        window.requestIdleCallback(loadAndPlay, { timeout: 1200 });
-        return;
-    }
+    const scheduleLoad = () => {
+        if ('requestIdleCallback' in window) {
+            window.requestIdleCallback(loadAndPlay, { timeout: 1200 });
+            return;
+        }
 
-    window.setTimeout(loadAndPlay, 600);
+        window.setTimeout(loadAndPlay, 600);
+    };
+
+    window.requestAnimationFrame(() => {
+        window.requestAnimationFrame(scheduleLoad);
+    });
 }
 
 if (document.readyState === 'loading') {
@@ -729,7 +740,13 @@ function syncGAConsent() {
 
 // Cookies Banner
 document.addEventListener("DOMContentLoaded", async () => {
-    const consent = await cookieConsentReady;
+    await new Promise((resolve) => {
+        window.requestAnimationFrame(() => {
+            window.requestAnimationFrame(resolve);
+        });
+    });
+
+    const consent = await loadCookieConsent();
 
     consent.run({
         mode: 'opt-in',
