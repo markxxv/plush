@@ -17,6 +17,13 @@
 
 @section('metaTitle', $metaTitle)
 @section('metaDescription', $metaDescription)
+@section('head')
+    <link
+        rel="alternate"
+        type="text/markdown"
+        href="{{ localized_route('shop.item.markdown', ['url' => $product->url]) }}"
+    >
+@endsection
 
 <x-layout>
     <main class="">
