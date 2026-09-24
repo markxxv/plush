@@ -47,6 +47,7 @@ class Product extends Model implements HasMedia
                         'media.disk',
                         'media.conversions_disk',
                         'media.manipulations',
+                        'media.generated_conversions',
                         'media.order_column',
                     ])
                     ->where('collection_name', 'gallery')
