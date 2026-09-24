@@ -41,7 +41,7 @@
                 : null;
         @endphp
 
-        <picture>
+        <picture class="block">
             @if($firstAvif)
                 <source srcset="{{ $firstAvif }}" type="image/avif">
             @endif
@@ -58,7 +58,7 @@
         </picture>
 
         {{-- Liquid reveal: second image spreads from cursor position like a drop of water --}}
-        <picture>
+        <picture class="block">
             @if($secondAvif)
                 <source media="(min-width: 768px)" srcset="{{ $secondAvif }}" type="image/avif">
             @endif
