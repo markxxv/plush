@@ -17,32 +17,65 @@
     <div x-ref="imgBox" class="img relative overflow-hidden">
         @php
             $images = $product->media;
+            $firstMedia = $images->get(0);
+            $secondMedia = $images->get(1) ?? $firstMedia;
 
-            $firstImage = $images->get(0)?->getUrl('small');
-            $secondImage = $images->get(1)?->getUrl('small') ?? $firstImage;
+            $firstImage = $firstMedia
+                ? ($firstMedia->hasGeneratedConversion('small') ? $firstMedia->getUrl('small') : $firstMedia->getUrl())
+                : null;
+
+            $secondImage = $secondMedia
+                ? ($secondMedia->hasGeneratedConversion('small') ? $secondMedia->getUrl('small') : $secondMedia->getUrl())
+                : $firstImage;
+
+            $firstAvif = $firstMedia?->hasGeneratedConversion('smalla')
+                ? $firstMedia->getUrl('smalla')
+                : null;
+
+            $secondAvif = $secondMedia?->hasGeneratedConversion('smalla')
+                ? $secondMedia->getUrl('smalla')
+                : null;
+
+            $wishlistImage = $firstMedia
+                ? ($firstMedia->hasGeneratedConversion('thumb') ? $firstMedia->getUrl('thumb') : $firstMedia->getUrl())
+                : null;
         @endphp
 
-        <img
-            src="{{ $firstImage }}"
-            width="800"
-            height="1199"
-            loading="lazy"
-            decoding="async"
-            class="first w-full block"
-            alt="{{ $product->title }}"
-        >
+        <picture>
+            @if($firstAvif)
+                <source srcset="{{ $firstAvif }}" type="image/avif">
+            @endif
+
+            <img
+                src="{{ $firstImage }}"
+                width="800"
+                height="1199"
+                loading="lazy"
+                decoding="async"
+                class="first w-full block"
+                alt="{{ $product->title }}"
+            >
+        </picture>
 
         {{-- Liquid reveal: second image spreads from cursor position like a drop of water --}}
-        <img
-            src="{{ $secondImage }}"
-            width="800"
-            height="1199"
-            loading="lazy"
-            decoding="async"
-            class="hover w-full absolute inset-0 object-cover transition-[clip-path] duration-[900ms] ease-out"
-            :style="`clip-path: circle(${hover ? 150 : 0}% at ${x}% ${y}%)`"
-            alt="{{ $product->title }}"
-        >
+        <picture>
+            @if($secondAvif)
+                <source media="(min-width: 768px)" srcset="{{ $secondAvif }}" type="image/avif">
+            @endif
+
+            <source media="(min-width: 768px)" srcset="{{ $secondImage }}" type="image/webp">
+
+            <img
+                src="{{ $firstImage }}"
+                width="800"
+                height="1199"
+                loading="lazy"
+                decoding="async"
+                class="hover w-full absolute inset-0 object-cover transition-[clip-path] duration-[900ms] ease-out"
+                :style="`clip-path: circle(${hover ? 150 : 0}% at ${x}% ${y}%)`"
+                alt="{{ $product->title }}"
+            >
+        </picture>
 
         {{-- Floating cursor tag --}}
         <div
@@ -62,7 +95,7 @@
                     'id' => $product->id,
                     'title' => $product->title,
                     'price' => $product->price,
-                    'image' => $product->getFirstMediaUrl('gallery', 'thumb'),
+                    'image' => $wishlistImage,
                     'url' => $product->url
                 ]) }})"
                 x-data
