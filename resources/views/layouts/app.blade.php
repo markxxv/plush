@@ -27,6 +27,7 @@
         as="font"
         type="font/woff2"
         crossorigin
+        media="(min-width: 768px)"
     >
 
     @yield('head')
