@@ -264,6 +264,115 @@ class Shop extends Controller
         }
     }
 
+    public function preorder(Request $request)
+    {
+        $data = $request->validate([
+            'product_id' => ['required', 'integer'],
+            'locale' => ['required', 'in:en,fr'],
+            'full_name' => ['required', 'string', 'max:255'],
+            'phone' => ['nullable', 'string', 'max:40', 'required_without:email'],
+            'email' => ['nullable', 'email', 'max:255', 'required_without:phone'],
+            'measurements' => ['nullable', 'string', 'max:500'],
+            'comment' => ['nullable', 'string', 'max:1500'],
+        ]);
+
+        $product = Product::query()
+            ->whereKey($data['product_id'])
+            ->where('active', true)
+            ->where('preorder', true)
+            ->first();
+
+        if (! $product) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Product is not available for pre-order.',
+            ], 422);
+        }
+
+        $botToken = env('TELEGRAM_BOT_TOKEN');
+        $chatId = env('TELEGRAM_CHAT_ID');
+
+        if (! $botToken || ! $chatId) {
+            \Log::warning('Pre-order Telegram notification skipped: credentials are missing.');
+
+            return response()->json([
+                'success' => false,
+                'message' => 'Unable to send request.',
+            ], 503);
+        }
+
+        $locale = $data['locale'];
+        $title = $product->{'title_' . $locale} ?: $product->title_en;
+        $slug = $product->{'slug_' . $locale} ?: $product->slug_en;
+        $productUrl = localized_route(
+            'shop.item',
+            ['url' => $slug],
+            $locale
+        );
+
+        $lines = [
+            '🧵 NEW PRE-ORDER REQUEST',
+            '',
+            "📦 Product: {$title}",
+            "🔗 {$productUrl}",
+            '',
+            "👤 Customer: {$data['full_name']}",
+        ];
+
+        if (! empty($data['phone'])) {
+            $lines[] = "📱 Phone: {$data['phone']}";
+        }
+
+        if (! empty($data['email'])) {
+            $lines[] = "📧 Email: {$data['email']}";
+        }
+
+        if (! empty($data['measurements'])) {
+            $lines[] = "📏 Measurements: {$data['measurements']}";
+        }
+
+        if (! empty($data['comment'])) {
+            $lines[] = "💬 Comment: {$data['comment']}";
+        }
+
+        $lines[] = '';
+        $lines[] = '🌐 Language: ' . strtoupper($locale);
+        $lines[] = '📅 Date: ' . now()->format('d.m.Y H:i');
+
+        try {
+            $response = Http::post(
+                "https://api.telegram.org/bot{$botToken}/sendMessage",
+                [
+                    'chat_id' => $chatId,
+                    'text' => implode("\n", $lines),
+                ]
+            );
+
+            if (! $response->successful()) {
+                \Log::error('Pre-order Telegram notification failed.', [
+                    'status' => $response->status(),
+                    'body' => $response->body(),
+                ]);
+
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Unable to send request.',
+                ], 502);
+            }
+        } catch (\Exception $e) {
+            \Log::error('Pre-order Telegram notification failed: ' . $e->getMessage());
+
+            return response()->json([
+                'success' => false,
+                'message' => 'Unable to send request.',
+            ], 500);
+        }
+
+        return response()->json([
+            'success' => true,
+        ]);
+    }
+
     public function orderStatus($orderNumber)
     {
         $order = Order::where('order_number', $orderNumber)->firstOrFail();
