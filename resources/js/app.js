@@ -72,7 +72,7 @@ document.addEventListener('alpine:init', () => {
                 this.embla = EmblaCarousel(this.$refs.viewport, {
                     align: 'start',
                     containScroll: 'trimSnaps',
-                    loop: false,
+                    loop: true,
                     dragFree: false,
                     duration: 25,
                     watchDrag: () => !this.isZoomed,
@@ -102,10 +102,12 @@ document.addEventListener('alpine:init', () => {
         },
 
         goTo(index) {
-            if (!this.embla) return;
+            if (!this.embla || this.totalSlides < 1) return;
 
-            const clamped = Math.max(0, Math.min(this.totalSlides - 1, index));
-            this.embla.scrollTo(clamped);
+            const normalized =
+                ((index % this.totalSlides) + this.totalSlides) % this.totalSlides;
+
+            this.embla.scrollTo(normalized);
         },
 
         recordPointerDown(event) {
