@@ -44,7 +44,7 @@
         </div>
 
         <div class="alert_box__content">
-            <span class="alert_box__label">{{ __('Added') }}</span>
+            <span class="alert_box__label" data-toast-label>{{ __('Added') }}</span>
             <span class="alert_box__message" data-toast-message></span>
         </div>
 
