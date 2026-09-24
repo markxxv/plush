@@ -9,7 +9,7 @@ const GA_ID = 'G-S1M9Q3EGJ9';
 const CLARITY_ID = 'qjix4dki1n';
 
 
-function showToast(message) {
+function showToast(message, label = null) {
     document.querySelector('.alert_box')?.remove();
 
     const template = document.getElementById('storefront-toast-template');
@@ -22,10 +22,15 @@ function showToast(message) {
     toast.append(template.content.cloneNode(true));
 
     const messageEl = toast.querySelector('[data-toast-message]');
+    const labelEl = toast.querySelector('[data-toast-label]');
     const close = toast.querySelector('[data-toast-close]');
 
     if (messageEl) {
         messageEl.textContent = message;
+    }
+
+    if (label && labelEl) {
+        labelEl.textContent = label;
     }
 
     document.body.appendChild(toast);
@@ -52,6 +57,84 @@ function showToast(message) {
 }
 
 document.addEventListener('alpine:init', () => {
+    Alpine.data('preorderRequest', (config) => ({
+        open: false,
+        sending: false,
+        error: '',
+        fields: {
+            fullName: '',
+            phone: '',
+            email: '',
+            measurements: '',
+            comment: '',
+        },
+
+        reset() {
+            this.fields = {
+                fullName: '',
+                phone: '',
+                email: '',
+                measurements: '',
+                comment: '',
+            };
+            this.error = '';
+        },
+
+        async submit() {
+            if (this.sending) return;
+
+            this.error = '';
+
+            if (!this.fields.fullName.trim()) {
+                this.error = config.nameError;
+                return;
+            }
+
+            if (!this.fields.phone.trim() && !this.fields.email.trim()) {
+                this.error = config.contactError;
+                return;
+            }
+
+            this.sending = true;
+
+            try {
+                const csrf = document.querySelector('meta[name="csrf-token"]')?.content;
+
+                const response = await fetch('/api/request', {
+                    method: 'POST',
+                    credentials: 'same-origin',
+                    headers: {
+                        'Accept': 'application/json',
+                        'Content-Type': 'application/json',
+                        'X-CSRF-TOKEN': csrf || '',
+                    },
+                    body: JSON.stringify({
+                        product_id: config.productId,
+                        locale: config.locale,
+                        full_name: this.fields.fullName.trim(),
+                        phone: this.fields.phone.trim(),
+                        email: this.fields.email.trim(),
+                        measurements: this.fields.measurements.trim(),
+                        comment: this.fields.comment.trim(),
+                    }),
+                });
+
+                if (!response.ok) {
+                    this.error = config.sendError;
+                    return;
+                }
+
+                this.open = false;
+                this.reset();
+                showToast(config.successMessage, config.successLabel);
+            } catch {
+                this.error = config.sendError;
+            } finally {
+                this.sending = false;
+            }
+        },
+    }));
+
     Alpine.data('productGallery', (totalSlides, images) => ({
         activeSlide: 0,
         totalSlides,
