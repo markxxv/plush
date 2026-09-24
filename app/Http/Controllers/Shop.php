@@ -15,7 +15,8 @@ class Shop extends Controller
         $locale = app()->getLocale();
         $slugColumn = 'slug_' . $locale;
 
-        $collections = \App\Models\ProductCollection::query()
+        $collections = ProductCollection::query()
+            ->forNavigation()
             ->where('active', true)
             ->orderBy('position')
             ->get();
@@ -23,14 +24,21 @@ class Shop extends Controller
         $currentCollection = null;
 
         if ($request->filled('collection')) {
-            $currentCollection = $collections
+            $navigationCollection = $collections
                 ->firstWhere($slugColumn, $request->string('collection')->toString());
 
-            abort_unless($currentCollection, 404);
+            abort_unless($navigationCollection, 404);
+
+            $currentCollection = ProductCollection::query()
+                ->forStorefrontDetail()
+                ->whereKey($navigationCollection->id)
+                ->where('active', true)
+                ->firstOrFail();
         }
 
-        $products = \App\Models\Product::query()
-            ->where('active', true)
+        $products = Product::query()
+            ->forCard()
+            ->where('products.active', true)
             ->when(
                 $currentCollection,
                 fn ($query) => $query->whereHas(
@@ -38,14 +46,7 @@ class Shop extends Controller
                     fn ($query) => $query->whereKey($currentCollection->id)
                 )
             )
-            ->with([
-                'sizes',
-                'collections',
-                'media' => fn ($query) => $query
-                    ->where('collection_name', 'gallery')
-                    ->orderBy('order_column'),
-            ])
-            ->latest('created_at')
+            ->latest('products.created_at')
             ->paginate(12)
             ->withQueryString();
 
@@ -87,13 +88,13 @@ class Shop extends Controller
 
         if ($collectionIds->isNotEmpty()) {
             $similar = Product::query()
-                ->where('active', true)
+                ->forCard()
+                ->where('products.active', true)
                 ->whereKeyNot($product->id)
                 ->whereHas('collections', fn ($query) =>
                     $query->whereIn('product_collections.id', $collectionIds)
                 )
-                ->with($media)
-                ->latest('id')
+                ->latest('products.id')
                 ->limit(4)
                 ->get();
         }
@@ -102,15 +103,15 @@ class Shop extends Controller
             $excludeIds = $similar->pluck('id')->push($product->id);
 
             $latest = Product::query()
-                ->where('active', true)
-                ->whereNotIn('id', $excludeIds)
+                ->forCard()
+                ->where('products.active', true)
+                ->whereNotIn('products.id', $excludeIds)
                 ->when($collectionIds->isNotEmpty(), fn ($query) =>
                     $query->whereDoesntHave('collections', fn ($query) =>
                         $query->whereIn('product_collections.id', $collectionIds)
                     )
                 )
-                ->with($media)
-                ->latest('id')
+                ->latest('products.id')
                 ->limit(4 - $similar->count())
                 ->get();
 
@@ -126,25 +127,13 @@ class Shop extends Controller
     public function collections()
     {
         $collections = ProductCollection::query()
+            ->forNavigation()
             ->where('active', true)
             ->orderBy('position')
             ->with([
                 'products' => fn ($query) => $query
+                    ->forCard()
                     ->where('products.active', true)
-                    ->select([
-                        'products.id',
-                        'products.title_en',
-                        'products.title_fr',
-                        'products.slug_en',
-                        'products.slug_fr',
-                        'products.price',
-                    ])
-                    ->with([
-                        'media' => fn ($query) => $query
-                            ->where('collection_name', 'gallery')
-                            ->orderBy('order_column')
-                            ->limit(2),
-                    ])
                     ->latest('products.id')
                     ->limit(4),
             ])
@@ -160,31 +149,32 @@ class Shop extends Controller
         $locale = app()->getLocale();
 
         $collection = ProductCollection::query()
+            ->forStorefrontDetail()
             ->where('active', true)
             ->where('slug_' . $locale, $url)
             ->firstOrFail();
 
+        $collections = ProductCollection::query()
+            ->forNavigation()
+            ->where('active', true)
+            ->orderBy('position')
+            ->get();
+
         $products = $collection
             ->products()
+            ->forCard()
             ->where('products.active', true)
-            ->with([
-                'media' => fn ($query) => $query
-                    ->where('collection_name', 'gallery')
-                    ->orderBy('order_column')
-                    ->limit(2),
-            ])
             ->latest('products.id')
             ->paginate(24);
 
         return view('shop.index', [
             'products' => $products,
+            'collections' => $collections,
             'collection' => $collection,
+            'currentCollection' => $collection,
             'pageTitle' => $collection->{'name_' . $locale} ?: $collection->name_en,
         ]);
     }
-
-
-
 
 
     public function checkout()
