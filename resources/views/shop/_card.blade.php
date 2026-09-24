@@ -16,10 +16,7 @@
 
     <div x-ref="imgBox" class="img relative overflow-hidden">
         @php
-            $images = $product->media
-                ->where('collection_name', 'gallery')
-                ->sortBy('order_column')
-                ->values();
+            $images = $product->media;
 
             $firstImage = $images->get(0)?->getUrl('small');
             $secondImage = $images->get(1)?->getUrl('small') ?? $firstImage;
