@@ -7,6 +7,66 @@ const META_PIXEL_ID = '2751219188608886';
 const GA_ID = 'G-S1M9Q3EGJ9';
 const CLARITY_ID = 'qjix4dki1n';
 
+
+function showToast(message) {
+    document.querySelector('.alert_box')?.remove();
+
+    const toast = document.createElement('div');
+    toast.className = 'alert_box';
+    toast.setAttribute('role', 'status');
+    toast.setAttribute('aria-live', 'polite');
+
+    const icon = document.createElement('div');
+    icon.className = 'alert_box__icon';
+    icon.setAttribute('aria-hidden', 'true');
+    icon.textContent = '✓';
+
+    const text = document.createElement('div');
+    text.className = 'alert_box__content';
+
+    const label = document.createElement('span');
+    label.className = 'alert_box__label';
+    label.textContent = 'Added';
+
+    const messageEl = document.createElement('span');
+    messageEl.className = 'alert_box__message';
+    messageEl.textContent = message;
+
+    const close = document.createElement('button');
+    close.type = 'button';
+    close.className = 'alert_box__close';
+    close.setAttribute('aria-label', 'Close notification');
+    close.textContent = '×';
+
+    const progress = document.createElement('span');
+    progress.className = 'alert_box__progress';
+    progress.setAttribute('aria-hidden', 'true');
+
+    text.append(label, messageEl);
+    toast.append(icon, text, close, progress);
+    document.body.appendChild(toast);
+
+    let removed = false;
+
+    const removeToast = () => {
+        if (removed) return;
+        removed = true;
+
+        toast.classList.remove('is-visible');
+        toast.classList.add('is-leaving');
+
+        window.setTimeout(() => toast.remove(), 220);
+    };
+
+    close.addEventListener('click', removeToast);
+
+    requestAnimationFrame(() => {
+        requestAnimationFrame(() => toast.classList.add('is-visible'));
+    });
+
+    window.setTimeout(removeToast, 4000);
+}
+
 document.addEventListener('alpine:init', () => {
     Alpine.store('cart', {
         items: [],
@@ -95,11 +155,7 @@ document.addEventListener('alpine:init', () => {
         },
 
         showNotification(message) {
-            const div = document.createElement('div');
-            div.className = 'alert_box';
-            div.textContent = message;
-            document.body.appendChild(div);
-            setTimeout(() => document.body.removeChild(div), 2000);
+            showToast(message);
         },
 
         // getColorName(colors, colorId) {
@@ -241,16 +297,7 @@ document.addEventListener('alpine:init', () => {
         },
 
         showNotification(message) {
-            const div = document.createElement('div');
-            div.className = 'alert_box';
-            div.textContent = message;
-            document.body.appendChild(div);
-
-            setTimeout(() => {
-                div.style.opacity = '0';
-                div.style.transform = 'translateY(-8px)';
-                setTimeout(() => document.body.removeChild(div), 300);
-            }, 2000);
+            showToast(message);
         }
     });
 
