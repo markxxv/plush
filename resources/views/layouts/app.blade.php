@@ -13,6 +13,7 @@
     <link rel="icon" href="/favicon.ico" sizes="32x32">
     <link rel="icon" href="/img/favicon.png" type="image/svg+xml">
     <link rel="apple-touch-icon" href="/img/apple-touch-icon.png">
+    <link rel="describedby" href="/llms.txt">
 
     <link
         rel="preload"
