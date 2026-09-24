@@ -281,6 +281,138 @@
                         </div>
 
                     </div>
+
+                    @if(!$product->preorder && $product->availability)
+                        <div class="fixed inset-x-0 bottom-0 z-50 pointer-events-none md:p-4">
+                            <div class="pointer-events-auto bg-white shadow-2xl md:mx-auto md:max-w-2xl md:rounded-2xl">
+                                <div class="flex items-center gap-3 px-3 pt-2 pb-[max(0.5rem,env(safe-area-inset-bottom))] md:p-3">
+                                    @if($product->getFirstMediaUrl('gallery', 'thumb'))
+                                        <img
+                                            src="{{ $product->getFirstMediaUrl('gallery', 'thumb') }}"
+                                            alt="{{ $title }}"
+                                            class="hidden h-14 w-11 shrink-0 rounded-xl object-cover md:block"
+                                        >
+                                    @endif
+
+                                    <div class="hidden min-w-0 flex-1 md:block">
+                                        <p class="truncate text-sm font-medium text-black">
+                                            {{ $title }}
+                                        </p>
+
+                                        @if($product->price > 0)
+                                            <p class="mt-0.5 text-sm text-neutral-500">
+                                                {{ number_format((float) $product->price, 0) }}€
+                                            </p>
+                                        @endif
+                                    </div>
+
+                                    @if($product->price > 0)
+                                        <p class="shrink-0 text-sm font-medium text-black md:hidden">
+                                            {{ number_format((float) $product->price, 0) }}€
+                                        </p>
+                                    @endif
+
+                                    <button
+                                        type="button"
+                                        @click="openQuickBuy()"
+                                        class="flex h-11 flex-1 items-center justify-center rounded-xl bg-black px-5 text-sm font-medium text-white transition hover:bg-neutral-800 md:flex-none md:min-w-44"
+                                    >
+                                        {{ __('Add to Cart') }}
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+
+                        @if($product->sizes->count() > 1)
+                            <div
+                                x-show="quickBuyOpen"
+                                x-cloak
+                                @keydown.escape.window="quickBuyOpen = false"
+                                class="fixed inset-0 z-[70]"
+                            >
+                                <button
+                                    type="button"
+                                    @click="quickBuyOpen = false"
+                                    class="absolute inset-0 bg-zinc-950 opacity-20"
+                                    aria-label="{{ __('Close') }}"
+                                ></button>
+
+                                <div
+                                    x-show="quickBuyOpen"
+                                    x-transition:enter="transition ease-out duration-200"
+                                    x-transition:enter-start="translate-y-full"
+                                    x-transition:enter-end="translate-y-0"
+                                    x-transition:leave="transition ease-in duration-150"
+                                    x-transition:leave-start="translate-y-0"
+                                    x-transition:leave-end="translate-y-full"
+                                    @click.stop
+                                    class="absolute inset-x-0 bottom-0 bg-white px-4 pt-4 pb-[max(1rem,env(safe-area-inset-bottom))] shadow-2xl md:left-1/2 md:right-auto md:bottom-24 md:w-[420px] md:-translate-x-1/2 md:rounded-2xl md:p-6"
+                                >
+                                    <div class="mx-auto mb-4 h-1 w-10 rounded-full bg-zinc-200 md:hidden"></div>
+
+                                    <div class="mb-5 flex items-start justify-between gap-4">
+                                        <div class="min-w-0">
+                                            <p class="text-xs text-neutral-400">
+                                                {{ __('Select Size') }}
+                                            </p>
+                                            <p class="mt-1 truncate text-base font-medium text-black">
+                                                {{ $title }}
+                                            </p>
+                                        </div>
+
+                                        <button
+                                            type="button"
+                                            @click="quickBuyOpen = false"
+                                            class="flex size-8 shrink-0 items-center justify-center rounded-full bg-zinc-100 text-lg leading-none text-zinc-500 transition hover:bg-zinc-200 hover:text-black"
+                                            aria-label="{{ __('Close') }}"
+                                        >
+                                            ×
+                                        </button>
+                                    </div>
+
+                                    <div class="grid grid-cols-4 gap-2">
+                                        @foreach($product->sizes as $size)
+                                            <label class="block cursor-pointer">
+                                                <input
+                                                    type="radio"
+                                                    name="quick-size"
+                                                    value="{{ $size->id }}"
+                                                    x-model.number="selectedSizeId"
+                                                    @change="errors.size = null"
+                                                    class="sr-only"
+                                                >
+
+                                                <span
+                                                    class="flex h-11 w-full items-center justify-center rounded-xl text-sm font-medium ring-1 transition"
+                                                    :class="selectedSizeId === {{ $size->id }}
+                                                        ? 'bg-black text-white ring-black'
+                                                        : 'bg-white text-black ring-zinc-200 hover:ring-black'"
+                                                >
+                                                    {{ $size->value }}
+                                                </span>
+                                            </label>
+                                        @endforeach
+                                    </div>
+
+                                    <p
+                                        x-show="errors.size"
+                                        x-cloak
+                                        class="mt-2 text-sm font-medium text-red-400"
+                                    >
+                                        {{ __('Select Size') }}
+                                    </p>
+
+                                    <button
+                                        type="button"
+                                        @click="confirmQuickBuy()"
+                                        class="mt-4 flex h-12 w-full items-center justify-center rounded-xl bg-black px-5 text-sm font-medium text-white transition hover:bg-neutral-800"
+                                    >
+                                        {{ __('Add to Cart') }}
+                                    </button>
+                                </div>
+                            </div>
+                        @endif
+                    @endif
                 </section>
             </div>
         </div>
