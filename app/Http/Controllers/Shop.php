@@ -70,10 +70,46 @@ class Shop extends Controller
             ->where($slugColumn, $url)
             ->where('active', true)
             ->with([
-                'sizes',
-                'collections',
-                'reviews' => fn ($query) => $query->where('active', true)->latest('created_at'),
+                'sizes' => fn ($query) => $query
+                    ->select([
+                        'product_sizes.id',
+                        'product_sizes.value',
+                    ])
+                    ->orderBy('product_sizes.position'),
+                'collections' => fn ($query) => $query
+                    ->select([
+                        'product_collections.id',
+                        'product_collections.name_en',
+                        'product_collections.name_fr',
+                        'product_collections.description_en',
+                        'product_collections.description_fr',
+                    ]),
+                'reviews' => fn ($query) => $query
+                    ->select([
+                        'product_reviews.id',
+                        'product_reviews.product_id',
+                        'product_reviews.name',
+                        'product_reviews.rating',
+                        'product_reviews.review',
+                        'product_reviews.created_at',
+                    ])
+                    ->where('active', true)
+                    ->latest('created_at'),
                 'media' => fn ($query) => $query
+                    ->select([
+                        'media.id',
+                        'media.model_type',
+                        'media.model_id',
+                        'media.collection_name',
+                        'media.name',
+                        'media.file_name',
+                        'media.disk',
+                        'media.conversions_disk',
+                        'media.manipulations',
+                        'media.custom_properties',
+                        'media.generated_conversions',
+                        'media.order_column',
+                    ])
                     ->where('collection_name', 'gallery')
                     ->orderBy('order_column'),
             ])
