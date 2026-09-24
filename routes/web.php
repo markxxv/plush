@@ -16,6 +16,11 @@ Route::post('payment/webhook', [
     'webhook',
 ])->name('payment.webhook');
 
+Route::post('api/request', [
+    Shop::class,
+    'preorder',
+])->name('api.preorder');
+
 
 $defaultLocale = config('localization.default');
 $locales = config('localization.locales');
