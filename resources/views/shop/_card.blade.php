@@ -63,7 +63,7 @@
                 <source media="(min-width: 768px)" srcset="{{ $secondAvif }}" type="image/avif">
             @endif
 
-            <source media="(min-width: 768px)" srcset="{{ $secondImage }}" type="image/webp">
+            <source media="(min-width: 768px)" srcset="{{ $secondImage }}">
 
             <img
                 src="{{ $firstImage }}"
