@@ -103,9 +103,13 @@ class ProductResource extends Resource
                                                         : (filled($state) ? [$state] : []))
                                                     ->columnSpanFull(),
 
-                                                Textarea::make('formula.en')
+                                                RichEditor::make('formula.en')
                                                     ->label('Formula')
-                                                    ->rows(4)
+                                                    ->toolbarButtons([
+                                                        ['bold', 'italic'],
+                                                        ['bulletList'],
+                                                        ['undo', 'redo'],
+                                                    ])
                                                     ->columnSpanFull(),
                                             ])
                                             ->collapsed()
@@ -171,9 +175,13 @@ class ProductResource extends Resource
                                                         : (filled($state) ? [$state] : []))
                                                     ->columnSpanFull(),
 
-                                                Textarea::make('formula.fr')
+                                                RichEditor::make('formula.fr')
                                                     ->label('Formule')
-                                                    ->rows(4)
+                                                    ->toolbarButtons([
+                                                        ['bold', 'italic'],
+                                                        ['bulletList'],
+                                                        ['undo', 'redo'],
+                                                    ])
                                                     ->columnSpanFull(),
                                             ])
                                             ->collapsed()
