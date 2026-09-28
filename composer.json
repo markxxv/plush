@@ -14,6 +14,7 @@
         "opcodesio/log-viewer": "^3.24",
         "secondnetwork/blade-tabler-icons": "^3.44",
         "spatie/laravel-medialibrary": "^11.23",
+        "spatie/laravel-translatable": "^6.14",
         "stripe/stripe-php": "^20.3",
         "wamania/php-stemmer": "^4.0"
     },
