@@ -82,6 +82,28 @@ class ProductResource extends Resource
                                             ])
                                             ->columnSpanFull(),
 
+                                        Section::make('Product details')
+                                            ->description('Material, composition and formula')
+                                            ->icon('tabler-list-details')
+                                            ->schema([
+                                                Textarea::make('material.en')
+                                                    ->label('Material')
+                                                    ->rows(3)
+                                                    ->columnSpanFull(),
+
+                                                Textarea::make('composition.en')
+                                                    ->label('Composition')
+                                                    ->rows(3)
+                                                    ->columnSpanFull(),
+
+                                                Textarea::make('formula.en')
+                                                    ->label('Formula')
+                                                    ->rows(4)
+                                                    ->columnSpanFull(),
+                                            ])
+                                            ->collapsed()
+                                            ->compact(),
+
                                         Section::make('SEO')
                                             ->icon('tabler-brand-google')
                                             ->schema([
@@ -121,6 +143,28 @@ class ProductResource extends Resource
                                                 ['undo', 'redo'],
                                             ])
                                             ->columnSpanFull(),
+
+                                        Section::make('Détails du produit')
+                                            ->description('Matière, composition et formule')
+                                            ->icon('tabler-list-details')
+                                            ->schema([
+                                                Textarea::make('material.fr')
+                                                    ->label('Matière')
+                                                    ->rows(3)
+                                                    ->columnSpanFull(),
+
+                                                Textarea::make('composition.fr')
+                                                    ->label('Composition')
+                                                    ->rows(3)
+                                                    ->columnSpanFull(),
+
+                                                Textarea::make('formula.fr')
+                                                    ->label('Formule')
+                                                    ->rows(4)
+                                                    ->columnSpanFull(),
+                                            ])
+                                            ->collapsed()
+                                            ->compact(),
 
                                         Section::make('SEO')
                                             ->icon('tabler-brand-google')
@@ -167,13 +211,23 @@ class ProductResource extends Resource
                 Section::make('Settings')
                     ->schema([
 
-                        TextInput::make('price')
-                            ->label('Price')
-                            ->numeric()
-                            ->prefix('€')
-                            ->required()
-                            ->default(0)
-                            ->prefixIcon('tabler-currency-euro'),
+                        Grid::make(2)
+                            ->schema([
+                                TextInput::make('price')
+                                    ->label('Price')
+                                    ->numeric()
+                                    ->prefix('€')
+                                    ->required()
+                                    ->default(0)
+                                    ->prefixIcon('tabler-currency-euro'),
+
+                                TextInput::make('volume')
+                                    ->label('Volume')
+                                    ->numeric()
+                                    ->suffix('ml')
+                                    ->placeholder('50')
+                                    ->prefixIcon('tabler-bottle'),
+                            ]),
 
                         Toggle::make('active')
                             ->label('Active')
