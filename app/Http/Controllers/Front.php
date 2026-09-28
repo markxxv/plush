@@ -36,6 +36,16 @@ class Front extends Controller
             ->filter()
             ->values();
 
+        $spiritusProducts = Product::query()
+            ->forCard()
+            ->where('products.active', true)
+            ->whereHas('collections', fn ($query) => $query
+                ->where('product_collections.id', 4)
+            )
+            ->latest('products.id')
+            ->limit(3)
+            ->get();
+
         $collection = Product::query()
             ->forCard()
             ->where('products.active', true)
@@ -48,6 +58,7 @@ class Front extends Controller
         return view('home', [
             'topProducts' => $topProducts,
             'topFashop' => $topFashop,
+            'spiritusProducts' => $spiritusProducts,
             'collection' => $collection,
         ]);
     }
