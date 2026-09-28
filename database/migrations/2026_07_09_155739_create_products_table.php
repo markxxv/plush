@@ -21,6 +21,10 @@ return new class extends Migration
             $table->longText('description_en')->nullable();
             $table->longText('description_fr')->nullable();
 
+            $table->longText('material')->nullable();
+            $table->longText('composition')->nullable();
+            $table->longText('formula')->nullable();
+
             $table->string('meta_title_en')->nullable();
             $table->string('meta_title_fr')->nullable();
 
@@ -28,6 +32,7 @@ return new class extends Migration
             $table->text('meta_description_fr')->nullable();
 
             $table->decimal('price', 10, 2)->default(0);
+            $table->tinyInteger('volume')->nullable();
 
             $table->boolean('availability')->default(true);
             $table->boolean('preorder')->default(false);
