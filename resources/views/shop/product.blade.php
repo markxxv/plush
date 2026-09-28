@@ -49,7 +49,7 @@
 
                 {{-- Product Info --}}
                 <section
-                    class="order-1 md:order-2 md:py-28"
+                    class="order-1 md:order-2 md:px-24 md:py-28"
                     x-data="productPage(@js([
                         'id' => $product->id,
                         'title' => $title,
