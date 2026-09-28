@@ -88,11 +88,19 @@
                                 {{ $title }}
                             </h1>
 
-                            @if($product->price > 0)
-                            <p class="text-2xl md:text-3xl font-medium mt-6">
-                                {{ number_format((float) $product->price, 0) }}€
-                            </p>
-                            @endif
+                            <div class="mt-6 flex items-baseline gap-4">
+                                @if($product->price > 0)
+                                    <p class="text-2xl md:text-3xl font-medium">
+                                        {{ number_format((float) $product->price, 0) }}€
+                                    </p>
+                                @endif
+
+                                @if((int) $product->volume > 1)
+                                    <p class="text-sm font-normal text-neutral-400">
+                                        {{ (int) $product->volume }} ml
+                                    </p>
+                                @endif
+                            </div>
 
                         </div>
 
