@@ -36,6 +36,16 @@
           @endforeach
         </div>
 
+        @if($spiritusProducts->isNotEmpty())
+            <h2 class="section_title mt-12">Spiritus</h2>
+
+            <div class="products_grid mt-10">
+                @foreach ($spiritusProducts as $product)
+                    @include('shop._card', ['product' => $product])
+                @endforeach
+            </div>
+        @endif
+
         <div class="pre_title text-xs mb-2 mt-12 uppercase">Limited Edition</div>
         <h2 class="section_title">Luna Code 26</h2>
 
