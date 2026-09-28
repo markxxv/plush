@@ -11,6 +11,7 @@ use Filament\Forms\Components\Toggle;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\RichEditor;
 use Filament\Forms\Components\Textarea;
+use Filament\Forms\Components\TagsInput;
 use Filament\Forms\Components\SpatieMediaLibraryFileUpload;
 
 use App\Filament\Resources\Products\Pages\CreateProduct;
@@ -86,14 +87,20 @@ class ProductResource extends Resource
                                             ->description('Material, composition and formula')
                                             ->icon('tabler-list-details')
                                             ->schema([
-                                                Textarea::make('material.en')
+                                                TagsInput::make('material.en')
                                                     ->label('Material')
-                                                    ->rows(3)
+                                                    ->placeholder('Add material')
+                                                    ->formatStateUsing(fn ($state) => is_array($state)
+                                                        ? $state
+                                                        : (filled($state) ? [$state] : []))
                                                     ->columnSpanFull(),
 
-                                                Textarea::make('composition.en')
+                                                TagsInput::make('composition.en')
                                                     ->label('Composition')
-                                                    ->rows(3)
+                                                    ->placeholder('Add composition')
+                                                    ->formatStateUsing(fn ($state) => is_array($state)
+                                                        ? $state
+                                                        : (filled($state) ? [$state] : []))
                                                     ->columnSpanFull(),
 
                                                 Textarea::make('formula.en')
@@ -148,14 +155,20 @@ class ProductResource extends Resource
                                             ->description('Matière, composition et formule')
                                             ->icon('tabler-list-details')
                                             ->schema([
-                                                Textarea::make('material.fr')
+                                                TagsInput::make('material.fr')
                                                     ->label('Matière')
-                                                    ->rows(3)
+                                                    ->placeholder('Ajouter une matière')
+                                                    ->formatStateUsing(fn ($state) => is_array($state)
+                                                        ? $state
+                                                        : (filled($state) ? [$state] : []))
                                                     ->columnSpanFull(),
 
-                                                Textarea::make('composition.fr')
+                                                TagsInput::make('composition.fr')
                                                     ->label('Composition')
-                                                    ->rows(3)
+                                                    ->placeholder('Ajouter une composition')
+                                                    ->formatStateUsing(fn ($state) => is_array($state)
+                                                        ? $state
+                                                        : (filled($state) ? [$state] : []))
                                                     ->columnSpanFull(),
 
                                                 Textarea::make('formula.fr')
