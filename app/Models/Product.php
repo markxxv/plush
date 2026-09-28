@@ -11,14 +11,24 @@ use Spatie\Image\Enums\CropPosition;
 use Spatie\MediaLibrary\HasMedia;
 use Spatie\MediaLibrary\InteractsWithMedia;
 use Spatie\MediaLibrary\MediaCollections\Models\Media;
+use Spatie\Translatable\HasTranslations;
 
 class Product extends Model implements HasMedia
 {
     protected $guarded = ['id'];
+
     use InteractsWithMedia;
+    use HasTranslations;
+
+    public array $translatable = [
+        'material',
+        'composition',
+        'formula',
+    ];
 
     protected $casts = [
         'price' => 'decimal:2',
+        'volume' => 'integer',
         'availability' => 'boolean',
         'created_at' => 'datetime',
         'updated_at' => 'datetime',
