@@ -64,6 +64,35 @@ class Front extends Controller
     }
 
 
+
+    public function rituals()
+    {
+        $collection = ProductCollection::query()
+            ->forStorefrontDetail()
+            ->whereKey(6)
+            ->where('active', true)
+            ->firstOrFail();
+
+        $products = Product::query()
+            ->forCard()
+            ->addSelect([
+                'products.availability',
+                'products.preorder',
+                'products.volume',
+            ])
+            ->with([
+                'sizes' => fn ($query) => $query
+                    ->select(['product_sizes.id', 'product_sizes.value'])
+                    ->orderBy('product_sizes.position'),
+            ])
+            ->where('products.active', true)
+            ->whereHas('collections', fn ($query) => $query->whereKey($collection->id))
+            ->get()
+            ->keyBy('slug_en');
+
+        return view('pages.rituals', compact('collection', 'products'));
+    }
+
     public function search(Request $request): JsonResponse
     {
         $search = Str::of((string) $request->query('q'))

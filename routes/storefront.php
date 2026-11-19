@@ -7,6 +7,8 @@ use Illuminate\Support\Facades\Route;
 
 Route::get('/', [Front::class, 'home'])->name('home');
 
+Route::get('plush-rituals', [Front::class, 'rituals'])->name('rituals');
+
 Route::view('about', 'pages.about')->name('about');
 Route::view('contact', 'pages.contact')->name('contact');
 
