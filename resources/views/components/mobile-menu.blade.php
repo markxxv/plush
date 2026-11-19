@@ -89,6 +89,10 @@
                             'route' => localized_route('shop'),
                         ],
                         [
+                            'label' => 'PLUSH Rituals',
+                            'route' => localized_route('rituals'),
+                        ],
+                        [
                             'label' => __('Collections'),
                             'route' => localized_route('collections'),
                         ],
