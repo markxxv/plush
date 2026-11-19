@@ -16,7 +16,7 @@
           poster="/img/poster.webp"
           data-hero-video
       >
-          <source data-src="/img/main_products.mp4" type="video/mp4">
+          <source data-src="/img/pluch_26_loop.mp4" type="video/mp4">
       </video>
       <div class="inner">
         <p class="pre_title">{{ __('LIMITED EDITION') }}</p>
