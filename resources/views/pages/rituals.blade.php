@@ -161,7 +161,7 @@
             <nav class="rituals-jump" aria-label="{{ $fr ? 'Fragrances' : 'Scents' }}">
                 @foreach($rituals as $ritual)
                     @if(collect($ritual['slugs'])->contains(fn ($slug) => $products->has($slug)))
-                        <a href="#{{ $ritual['tone'] }}" class="shrink-0 rounded-full px-5 py-2 text-sm transition bg-neutral-100 text-neutral-500 hover:bg-neutral-200 hover:text-black">{{ $ritual['name'] }} &darr;</a>
+                        <a href="#{{ $ritual['tone'] }}" class="shrink-0 rounded-full px-5 py-2 text-sm transition bg-neutral-100 text-neutral-500 hover:bg-neutral-200 hover:text-black">{{ $ritual['name'] }}</a>
                     @endif
                 @endforeach
             </nav>

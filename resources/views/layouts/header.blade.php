@@ -25,7 +25,7 @@
         <fieldset class="site_header_center">
             <a href="{{ localized_route('shop') }}" class="hidden text-xs uppercase md:inline-block" style="letter-spacing: 1px;">{{ __('Shop') }}</a>
             <a href="{{ localized_route('home') }}"><img src="/img/logo.svg" width="150" height="53" alt="Maison Plush Paris"></a>
-            <a href="{{ localized_route('collections') }}" class="hidden text-xs uppercase md:inline-block" style="letter-spacing: 1px;">{{ __('Collections') }}</a>
+            <a href="{{ localized_route('rituals') }}" class="hidden text-xs uppercase md:inline-block whitespace-nowrap" style="letter-spacing: 1px;">PLUSH Rituals</a>
         </fieldset>
         <fieldset x-data class="site_header_right items-center">
 {{--            <a href=""><svg  xmlns="http://www.w3.org/2000/svg"  width="18"  height="18"  viewBox="0 0 24 24"  fill="none"  stroke="currentColor"  stroke-width="1"  stroke-linecap="round"  stroke-linejoin="round"  class="icon icon-tabler icons-tabler-outline icon-tabler-user"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M8 7a4 4 0 1 0 8 0a4 4 0 0 0 -8 0" /><path d="M6 21v-2a4 4 0 0 1 4 -4h4a4 4 0 0 1 4 4v2" /></svg></a>--}}

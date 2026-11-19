@@ -17,6 +17,8 @@
         <article class="flex gap-12 lg:gap-24 order-3 md:order-2">
             <nav>
                 <p class="title">{{ __('Information') }}</p>
+                <a href="{{ localized_route('shop') }}">{{ __('Shop') }}</a>
+                <a href="{{ localized_route('collections') }}">{{ __('Collections') }}</a>
                 <a href="{{ localized_route('home') }}/about">{{ __('About Us') }}</a>
                 <a href="{{ localized_route('home') }}/contact">{{ __('Contact Us') }}</a>
                 <a href="{{ localized_route('home') }}/privacy-policy">{{ __('Privacy Policy') }}</a>
