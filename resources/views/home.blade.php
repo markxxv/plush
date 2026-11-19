@@ -30,11 +30,13 @@
     <section id="collection" class="section my-12 lg:my-24">
       <div class="container">
 
+        {{--
         <div class="products_grid4 mt-10">
           @foreach ($topProducts as $product)
             @include('shop._card')
           @endforeach
         </div>
+        --}}
 
         @if($spiritusProducts->isNotEmpty())
             <h2 class="section_title mt-12">Spiritus</h2>
