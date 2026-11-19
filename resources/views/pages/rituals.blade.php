@@ -37,9 +37,9 @@
     <link rel="alternate" hreflang="fr" href="{{ localized_route('rituals', [], 'fr') }}">
     <style>
         .rituals_page .site_header:not(:hover) { color: #fff; }
-        .rituals { background: #f8f7f4; color: #222521; font-weight: 300; }
+        .rituals { background: #fff; color: #171717; font-weight: 300; }
         .rituals * { box-sizing: border-box; }
-        .rituals-hero { position: relative; isolation: isolate; min-height: 560px; min-height: min(780px, max(520px, 80svh)); display: grid; place-items: center; overflow: hidden; color: white; background: #171e1b url('/img/poster.webp') center/cover no-repeat; }
+        .rituals-hero { position: relative; isolation: isolate; min-height: 560px; min-height: min(780px, max(520px, 80svh)); display: grid; place-items: center; overflow: hidden; color: white; background: #171717 url('/img/poster.webp') center/cover no-repeat; }
         .rituals-hero video, .rituals-hero::after { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; z-index: -1; }
         .rituals-hero::after { content: ''; background: linear-gradient(180deg, rgba(0,0,0,.36), rgba(0,0,0,.22) 38%, rgba(0,0,0,.55)); pointer-events: none; }
         .rituals-hero-content { padding: 112px 24px 80px; text-align: center; max-width: 680px; }
@@ -49,44 +49,44 @@
         .rituals-hero-link { display: inline-flex; align-items: center; gap: 12px; margin-top: 36px; padding-bottom: 7px; border-bottom: 1px solid rgba(255,255,255,.7); font-size: 13px; font-weight: 400; letter-spacing: .04em; }
         .rituals-video-toggle { position: absolute; bottom: 20px; right: 24px; display: grid; place-items: center; width: 44px; height: 44px; color: white; background: rgba(0,0,0,.35); border-radius: 50%; }
         .rituals-intro { max-width: 850px; margin: auto; padding: 100px 24px 92px; text-align: center; }
-        .rituals-intro .rituals-kicker { color: #70766e; }
+        .rituals-intro .rituals-kicker { color: #737373; }
         .rituals-intro h2 { font-weight: 300; font-size: 36px; margin: 18px 0 22px; }
-        .rituals-intro-description { max-width: 680px; margin: auto; font-size: 19px; line-height: 1.65; color: #575d55; }
-        .rituals-jump { display: flex; flex-wrap: wrap; justify-content: center; gap: 12px 28px; margin-top: 34px; font-size: 14px; font-weight: 400; }
-        .rituals-jump a { padding: 6px 0; border-bottom: 1px solid #b6b9b0; }
+        .rituals-intro-description { max-width: 680px; margin: auto; font-size: 19px; line-height: 1.65; color: #525252; }
+        .rituals-jump { display: flex; flex-wrap: wrap; justify-content: center; gap: 8px; margin-top: 34px; font-size: 14px; font-weight: 400; }
         .rituals-chapter { padding: 70px 0; scroll-margin-top: 20px; }
-        .rituals-chapter--forest { background: #e9ece5; }
-        .rituals-chapter--stone { background: #efede9; }
+        .rituals-chapter--forest { background: #f5f5f5; }
+        .rituals-chapter--stone { background: #fafafa; }
         .rituals-grid { display: grid; gap: 40px; grid-template-columns: minmax(0, .85fr) minmax(0, 1.6fr); align-items: center; }
         .rituals-chapter--stone .rituals-grid { grid-template-columns: minmax(0, 1.6fr) minmax(0, .85fr); }
         .rituals-chapter--stone .rituals-story { order: 2; }
         .rituals-story { padding: 24px 20px; }
-        .rituals-story .rituals-kicker { color: #646a61; }
+        .rituals-story .rituals-kicker { color: #737373; }
         .rituals-story h2 { font-weight: 300; font-size: 36px; margin: 20px 0 12px; }
-        .rituals-notes { font-size: 13px; font-weight: 400; letter-spacing: .02em; color: #646a61; }
+        .rituals-notes { font-size: 13px; font-weight: 400; letter-spacing: .02em; color: #737373; }
         .rituals-story-copy { font-size: 19px; line-height: 1.6; margin: 24px 0 30px; max-width: 350px; }
-        .rituals-pair { display: inline-flex; gap: 16px; align-items: center; justify-content: space-between; padding: 14px 20px; min-height: 48px; background: #242b24; color: white; border-radius: 3px; font-size: 14px; font-weight: 400; transition: background .25s; }
-        .rituals-pair:hover { background: #414b40; }
+        .rituals-pair { display: inline-flex; gap: 16px; align-items: center; justify-content: space-between; padding: 16px 20px; min-height: 48px; background: #000; color: white; border-radius: 12px; font-size: 14px; font-weight: 400; transition: background .25s; }
+        .rituals-pair:hover { background: #262626; }
         .rituals-pair-price { white-space: nowrap; opacity: .85; }
         .rituals-products { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 20px; }
         .rituals-product { min-width: 0; display: flex; flex-direction: column; }
-        .rituals-product-image { display: block; position: relative; aspect-ratio: 2 / 3; overflow: hidden; background: #e0dfdb; }
+        .rituals-product-image { display: block; position: relative; aspect-ratio: 2 / 3; overflow: hidden; background: #e5e5e5; }
         .rituals-product-image picture { display: block; width: 100%; height: 100%; }
         .rituals-product-image img { width: 100%; height: 100%; object-fit: cover; transition: transform .7s, opacity .5s; }
         .rituals-product-image .rituals-hover-image { position: absolute; inset: 0; opacity: 0; }
         .rituals-product-body { padding: 18px 0 0; display: flex; flex-direction: column; flex: 1; }
         .rituals-product-title { font-weight: 400; font-size: 18px; margin-bottom: 4px; }
         .rituals-product-title:hover { text-decoration: underline; text-underline-offset: 3px; }
-        .rituals-product-meta { display: flex; gap: 10px; justify-content: space-between; align-items: baseline; margin: 8px 0 14px; font-size: 15px; color: #555950; }
-        .rituals-product-price { font-size: 18px; font-weight: 400; white-space: nowrap; color: #222521; }
-        .rituals-product-action { display: flex; margin-top: auto; justify-content: space-between; align-items: center; gap: 5px; width: 100%; min-height: 46px; padding: 10px 14px; background: #fff; border-radius: 3px; color: #242b24; font-size: 13px; font-weight: 400; text-align: left; transition: background .25s, color .25s; }
-        .rituals-product-action:hover { background: #242b24; color: #fff; }
+        .rituals-product-meta { display: flex; gap: 10px; justify-content: space-between; align-items: baseline; margin: 8px 0 14px; font-size: 15px; color: #525252; }
+        .rituals-product-price { font-size: 18px; font-weight: 400; white-space: nowrap; color: #171717; }
+        .rituals-product-action { display: flex; margin-top: auto; justify-content: center; align-items: center; gap: 10px; width: 100%; min-height: 48px; padding: 16px 14px; background: #000; border-radius: 12px; color: #fff; font-size: 14px; font-weight: 400; text-align: center; transition: background .25s, color .25s; }
+        .rituals-product-action:hover { background: #262626; color: #fff; }
+        .rituals-product-action--secondary { background: #fff; color: #171717; box-shadow: 0 1px 2px rgb(0 0 0 / .05); }
+        .rituals-product-action--secondary:hover { background: #e5e5e5; color: #171717; }
         .rituals-product-action svg { flex-shrink: 0; }
-        .rituals-out { margin-top: auto; font-size: 13px; color: #646a61; padding: 14px 0; }
+        .rituals-out { margin-top: auto; font-size: 13px; color: #737373; padding: 14px 0; }
         .rituals-out:hover { text-decoration: underline; }
-        .rituals-end { text-align: center; padding: 86px 24px; background: #f8f7f4; }
+        .rituals-end { text-align: center; padding: 86px 24px; background: #fff; }
         .rituals-end h2 { font-size: 32px; font-weight: 300; margin: 16px 0; }
-        .rituals-end a { font-size: 14px; display: inline-flex; align-items: center; gap: 8px; border-bottom: 1px solid #7d847a; padding-bottom: 5px; }
         @media (hover: hover) {
             .rituals-product-image:hover img { transform: scale(1.025); }
             .rituals-product-image:hover .rituals-hover-image { opacity: 1; }
@@ -161,7 +161,7 @@
             <nav class="rituals-jump" aria-label="{{ $fr ? 'Fragrances' : 'Scents' }}">
                 @foreach($rituals as $ritual)
                     @if(collect($ritual['slugs'])->contains(fn ($slug) => $products->has($slug)))
-                        <a href="#{{ $ritual['tone'] }}">{{ $ritual['name'] }} &darr;</a>
+                        <a href="#{{ $ritual['tone'] }}" class="shrink-0 rounded-full px-5 py-2 text-sm transition bg-neutral-100 text-neutral-500 hover:bg-neutral-200 hover:text-black">{{ $ritual['name'] }} &darr;</a>
                     @endif
                 @endforeach
             </nav>
@@ -234,13 +234,13 @@
                                     </div>
                                     @if($product->availability && !$product->preorder && $product->price > 0 && $product->sizes->count() <= 1)
                                         <button type="button" x-data="{ product: @js($cartProducts->get($product->id)) }" @click="$store.cart.addItem(product, null, product.sizes[0]?.id ?? null)" class="rituals-product-action">
-                                            {{ $fr ? 'Ajouter au panier' : 'Add to bag' }}
-                                            <x-tabler-plus class="size-4" stroke-width="1.4" />
+                                            {{ __('Add to Cart') }}
+                                            <x-tabler-shopping-bag class="size-5 text-zinc-500" stroke-width="1.3" />
                                         </button>
                                     @elseif(!$product->availability && !$product->preorder)
                                         <a href="{{ $url }}" class="rituals-out">{{ $fr ? 'Rupture de stock' : 'Out of stock' }}</a>
                                     @else
-                                        <a href="{{ $url }}" class="rituals-product-action">
+                                        <a href="{{ $url }}" class="rituals-product-action rituals-product-action--secondary">
                                             {{ $product->preorder ? ($fr ? 'Précommander' : 'Pre-order') : ($fr ? 'Voir le produit' : 'View product') }}
                                             <x-tabler-arrow-up-right class="size-4" stroke-width="1.4" />
                                         </a>
@@ -256,7 +256,7 @@
         <section class="rituals-end">
             <p class="rituals-kicker">PLUSH Rituals</p>
             <h2>{{ $fr ? 'Un instant à soi.' : 'A moment for yourself.' }}</h2>
-            <a href="#rituals">{{ $fr ? 'Retrouver mon rituel' : 'Find your ritual' }} <x-tabler-arrow-up class="size-4" stroke-width="1.4" /></a>
+            <a href="#rituals" class="inline-flex items-center gap-2 rounded-full px-5 py-2 text-sm transition bg-neutral-100 text-neutral-500 hover:bg-neutral-200 hover:text-black">{{ $fr ? 'Retrouver mon rituel' : 'Find your ritual' }} <x-tabler-arrow-up class="size-4" stroke-width="1.4" /></a>
         </section>
     </main>
 </x-layout>
