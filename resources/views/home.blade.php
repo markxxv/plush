@@ -84,6 +84,49 @@
 
 
 
+    @php($fr = app()->getLocale() === 'fr')
+    <section class="container my-12 lg:my-24">
+        <a href="{{ localized_route('rituals') }}" class="home-rituals group" aria-label="PLUSH Rituals">
+            <span class="home-rituals-bg" aria-hidden="true"></span>
+            <span class="home-rituals-body">
+                <span class="home-rituals-kicker">{{ $fr ? 'Nouvelle collection' : 'New collection' }}</span>
+                <span class="home-rituals-title">PLUSH Rituals</span>
+                <span class="home-rituals-sub">{{ $fr ? 'Deux fragrances. Deux gestes. Pour soi, pour son intérieur.' : 'Two scents. Two gestures. For yourself, for your space.' }}</span>
+                <span class="home-rituals-notes">Rainfall Forest <i></i> Petrichor</span>
+                <span class="home-rituals-cta">
+                    {{ $fr ? 'Découvrir les rituels' : 'Discover the rituals' }}
+                    <x-tabler-arrow-right class="size-4" stroke-width="1.4" />
+                </span>
+            </span>
+        </a>
+    </section>
+
+    <style>
+        .home-rituals { --ease: cubic-bezier(.22, .61, .36, 1); position: relative; isolation: isolate; display: flex; align-items: flex-end; min-height: 440px; overflow: hidden; border-radius: 24px; color: #fff; background: #171717; }
+        .home-rituals-bg { position: absolute; inset: 0; z-index: -2; background: url('/img/poster.webp') center / cover no-repeat; transition: transform 1.4s var(--ease); }
+        .home-rituals::after { content: ''; position: absolute; inset: 0; z-index: -1; background: linear-gradient(90deg, rgba(0,0,0,.72), rgba(0,0,0,.28) 60%, rgba(0,0,0,.1)), linear-gradient(0deg, rgba(0,0,0,.4), transparent 50%); }
+        .home-rituals-body { display: flex; flex-direction: column; align-items: flex-start; max-width: 560px; padding: 56px; }
+        .home-rituals-kicker { display: inline-flex; align-items: center; gap: 14px; font-size: 11px; font-weight: 400; letter-spacing: .26em; text-transform: uppercase; opacity: .85; }
+        .home-rituals-kicker::before { content: ''; width: 32px; height: 1px; background: currentColor; opacity: .6; }
+        .home-rituals-title { margin: 18px 0 14px; font-size: clamp(34px, 4.4vw, 52px); line-height: 1.05; letter-spacing: .1em; font-weight: 300; }
+        .home-rituals-sub { font-size: 18px; line-height: 1.6; opacity: .88; text-wrap: balance; }
+        .home-rituals-notes { display: flex; align-items: center; gap: 12px; margin-top: 22px; font-size: 13px; font-weight: 400; letter-spacing: .04em; opacity: .75; }
+        .home-rituals-notes i { width: 3px; height: 3px; border-radius: 50%; background: currentColor; }
+        .home-rituals-cta { box-sizing: border-box; display: inline-flex; align-items: center; gap: 12px; margin-top: 34px; padding: 15px 24px; border-radius: 999px; background: #fff; color: #171717; font-size: 14px; font-weight: 400; transition: background .3s, color .3s, gap .4s var(--ease); }
+        .home-rituals-cta svg { transition: transform .4s var(--ease); }
+        .home-rituals:hover .home-rituals-bg { transform: scale(1.04); }
+        .home-rituals:hover .home-rituals-cta { background: #000; color: #fff; gap: 16px; }
+        .home-rituals:focus-visible { outline: 1px solid #171717; outline-offset: 4px; }
+        @media (max-width: 767px) {
+            .home-rituals { min-height: 420px; border-radius: 16px; }
+            .home-rituals::after { background: linear-gradient(0deg, rgba(0,0,0,.78), rgba(0,0,0,.2) 75%); }
+            .home-rituals-body { padding: 28px 22px; }
+            .home-rituals-sub { font-size: 16px; }
+            .home-rituals-cta { width: 100%; justify-content: space-between; }
+        }
+        @media (prefers-reduced-motion: reduce) { .home-rituals *, .home-rituals-bg { transition: none !important; } }
+    </style>
+
 {{--    <section class="container my-12 lg:my-24 relative overflow-hidden">--}}
 {{--  <div class="bg-black text-white rounded-3xl p-8 lg:p-16 relative">--}}
 {{--      <div class="max-w-2xl relative z-10">--}}
